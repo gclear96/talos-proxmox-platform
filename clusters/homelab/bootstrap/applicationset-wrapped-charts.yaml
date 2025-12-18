@@ -6,14 +6,16 @@ metadata:
 spec:
   generators:
     - git:
+        # Admin-controlled generator. Keep this repoURL in sync with the root app's repoURL.
         repoURL: https://github.com/YOUR_GH_USER/talos-platform.git
         revision: main
         directories:
           - path: apps/*/chart
   template:
     metadata:
-      name: '{{path.basename}}'
+      name: 'platform-{{path.basename}}'
     spec:
+      # Security: avoid templating the project field from git-controlled inputs.
       project: platform
       source:
         repoURL: https://github.com/YOUR_GH_USER/talos-platform.git

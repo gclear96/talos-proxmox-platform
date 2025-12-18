@@ -10,6 +10,12 @@ This repo is meant to be the “platform” repo in an App-of-Apps / Application
 This scaffold uses **wrapper Helm charts** stored in-repo at `apps/<name>/chart/`.
 Argo CD can render Helm charts from a Git path (when it finds a Chart.yaml).
 
+## First-time setup
+
+- Update `clusters/homelab/bootstrap/project-platform.yaml` `spec.sourceRepos` to your actual GitHub/Forgejo repo URL(s).
+- Update `clusters/homelab/bootstrap/applicationset-wrapped-charts.yaml` `repoURL` (generator + template) to match.
+- `hack/set-repourl.sh` can help rewrite repoURL strings during cutover.
+
 ## Layout
 
 - `clusters/homelab/bootstrap/` – applied by the root app

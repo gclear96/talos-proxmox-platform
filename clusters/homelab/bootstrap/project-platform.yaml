@@ -9,7 +9,34 @@ spec:
     - namespace: '*'
       server: https://kubernetes.default.svc
   sourceRepos:
-    - '*'
+    # Restrict to your platform repo(s) + any explicitly-allowed OCI registries.
+    # Update these during cutover (GitHub -> Forgejo).
+    - https://github.com/YOUR_GH_USER/talos-platform.git
+    - https://forgejo.example/YOURORG/talos-platform.git
+    - oci://*
   clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
+    # Core cluster-scoped resources needed by common platform charts.
+    - group: ""
+      kind: Namespace
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRoleBinding
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+    - group: apiregistration.k8s.io
+      kind: APIService
+    - group: networking.k8s.io
+      kind: IngressClass
+    - group: storage.k8s.io
+      kind: StorageClass
+    - group: storage.k8s.io
+      kind: CSIDriver
+    - group: scheduling.k8s.io
+      kind: PriorityClass
+    - group: cert-manager.io
+      kind: ClusterIssuer
