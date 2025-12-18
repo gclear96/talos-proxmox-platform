@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - project-platform.yaml
   - applicationset-wrapped-charts.yaml
+  - applicationset-oci.yaml

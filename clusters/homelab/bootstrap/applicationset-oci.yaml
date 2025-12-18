@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: platform-oci
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - name: forgejo
+            namespace: forgejo
+            repoURL: oci://code.forgejo.org/forgejo-helm
+            chart: forgejo
+            version: 15.0.3
+  template:
+    metadata:
+      name: 'platform-{{name}}'
+    spec:
+      project: platform
+      source:
+        repoURL: '{{repoURL}}'
+        chart: '{{chart}}'
+        targetRevision: '{{version}}'
+        helm:
+          releaseName: '{{name}}'
+          values: |
+            ingress:
+              enabled: true
+              className: nginx
+              hosts:
+                - host: forgejo.example.com
+                  paths:
+                    - path: /
+                      pathType: Prefix
+                      port: http
+            gitea:
+              admin:
+                existingSecret: forgejo-admin
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
