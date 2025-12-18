@@ -1,0 +1,4 @@
+# Values for the upstream dependency chart: cert-manager
+cert-manager:
+  # TODO: set values for your environment
+  {}

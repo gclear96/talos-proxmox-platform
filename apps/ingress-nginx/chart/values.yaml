@@ -1,0 +1,4 @@
+# Values for the upstream dependency chart: ingress-nginx
+ingress-nginx:
+  # TODO: set values for your environment
+  {}

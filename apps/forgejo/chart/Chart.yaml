@@ -1,0 +1,11 @@
+apiVersion: v2
+name: forgejo
+version: 0.1.0
+type: application
+
+# Forgejo’s chart is often distributed via OCI.
+# You can either:
+# - deploy it as a direct Helm source Application in an ApplicationSet, OR
+# - vendor/switch to a Helm repo format that works with dependencies.
+#
+# This wrapper chart is intentionally left incomplete (TODO).
