@@ -17,7 +17,13 @@ ApplicationSet (`clusters/homelab/bootstrap/applicationset-oci.yaml`).
 
 - Update `clusters/homelab/bootstrap/project-platform.yaml` `spec.sourceRepos` to your actual GitHub/Forgejo repo URL(s).
 - Update `clusters/homelab/bootstrap/applicationset-wrapped-charts.yaml` `repoURL` (generator + template) to match.
+- Update `clusters/homelab/bootstrap/applicationset-oci.yaml` (Forgejo ingress host, chart version if desired).
 - `hack/set-repourl.sh` can help rewrite repoURL strings during cutover.
+
+## Currently deployed apps
+
+- Wrapper charts (`apps/*/chart`): ingress-nginx, cert-manager, metrics-server
+- OCI apps (`clusters/homelab/bootstrap/applicationset-oci.yaml`): Forgejo (`oci://code.forgejo.org/forgejo-helm/forgejo`, pinned `15.0.3`)
 
 ## Forgejo admin secret (no secrets in Git)
 
@@ -32,6 +38,8 @@ kubectl -n forgejo create secret generic forgejo-admin \
   --from-literal=username=forgejo_admin \
   --from-literal=password='REPLACE_ME'
 ```
+
+Also update the Forgejo ingress host placeholder (`forgejo.example.com`) in `clusters/homelab/bootstrap/applicationset-oci.yaml`.
 
 ## Layout
 

@@ -8,5 +8,11 @@ set -euo pipefail
 FROM=${1:?from}
 TO=${2:?to}
 
-grep -RIl "$FROM" clusters/ | xargs -r sed -i.bak "s|$FROM|$TO|g"
-echo "Updated repoURL refs under clusters/. Review the .bak files, then commit."
+FILES=$(grep -RIl "$FROM" clusters/ || true)
+if [[ -z "${FILES}" ]]; then
+  echo "No matches found under clusters/."
+  exit 0
+fi
+
+echo "${FILES}" | xargs -r sed -i.bak "s|$FROM|$TO|g"
+echo "Updated repoURL refs under clusters/ (backup files: *.bak, ignored by git)."
