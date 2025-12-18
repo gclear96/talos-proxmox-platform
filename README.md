@@ -24,6 +24,15 @@ ApplicationSet (`clusters/homelab/bootstrap/applicationset-oci.yaml`).
 The Forgejo chart is configured to read admin credentials from a pre-created Secret named `forgejo-admin`.
 Create it manually (or via SealedSecrets later) before the Forgejo Application syncs.
 
+Example:
+
+```bash
+kubectl create namespace forgejo
+kubectl -n forgejo create secret generic forgejo-admin \
+  --from-literal=username=forgejo_admin \
+  --from-literal=password='REPLACE_ME'
+```
+
 ## Layout
 
 - `clusters/homelab/bootstrap/` – applied by the root app
