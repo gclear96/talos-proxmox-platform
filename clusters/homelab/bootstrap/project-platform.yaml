@@ -14,7 +14,18 @@ spec:
     - https://github.com/YOUR_GH_USER/talos-platform.git
     - https://forgejo.example/YOURORG/talos-platform.git
     - oci://code.forgejo.org/forgejo-helm
+    - oci://codeberg.org/wrenix/helm-charts
     - oci://ghcr.io/visualon/bitnamicharts
+    - https://charts.external-secrets.io
+    - https://charts.goauthentik.io
+    - https://charts.jetstack.io
+    - https://charts.longhorn.io
+    - https://grafana.github.io/helm-charts
+    - https://helm.releases.hashicorp.com
+    - https://kubernetes.github.io/ingress-nginx
+    - https://kubernetes-sigs.github.io/metrics-server
+    - https://metallb.github.io/metallb
+    - https://prometheus-community.github.io/helm-charts
   clusterResourceWhitelist:
     # Core cluster-scoped resources needed by common platform charts.
     - group: ""

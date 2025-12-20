@@ -1,7 +1,2 @@
 # Values for the upstream dependency chart: ingress-nginx
-ingress-nginx:
-  controller:
-    service:
-      # Start with NodePort to avoid requiring a LoadBalancer implementation on day 1.
-      # You can switch to LoadBalancer later (e.g., MetalLB) without changing app wiring.
-      type: NodePort
+ingress-nginx: {}

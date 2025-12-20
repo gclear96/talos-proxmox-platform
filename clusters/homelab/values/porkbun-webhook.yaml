@@ -1,0 +1,3 @@
+# Per-cluster overrides for porkbun-webhook
+# Must match ClusterIssuer webhook groupName.
+groupName: acme.porkbun.magomago.moe

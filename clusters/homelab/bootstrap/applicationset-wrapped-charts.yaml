@@ -5,15 +5,44 @@ metadata:
   namespace: argocd
 spec:
   generators:
-    - git:
-        # Admin-controlled generator. Keep this repoURL in sync with the root app's repoURL.
-        repoURL: https://github.com/YOUR_GH_USER/talos-platform.git
-        revision: main
-        directories:
-          - path: apps/*/chart
+    - list:
+        elements:
+          - name: ingress-nginx
+            namespace: ingress-nginx
+            path: apps/ingress-nginx/chart
+          - name: cert-manager
+            namespace: cert-manager
+            path: apps/cert-manager/chart
+          - name: porkbun-webhook
+            namespace: cert-manager
+            path: apps/porkbun-webhook/chart
+          - name: metrics-server
+            namespace: kube-system
+            path: apps/metrics-server/chart
+          - name: kube-prometheus-stack
+            namespace: monitoring
+            path: apps/kube-prometheus-stack/chart
+          - name: loki
+            namespace: monitoring
+            path: apps/loki/chart
+          - name: external-secrets
+            namespace: external-secrets
+            path: apps/external-secrets/chart
+          - name: vault
+            namespace: vault
+            path: apps/vault/chart
+          - name: longhorn
+            namespace: longhorn-system
+            path: apps/longhorn/chart
+          - name: metallb
+            namespace: metallb-system
+            path: apps/metallb/chart
+          - name: authentik
+            namespace: authentik
+            path: apps/authentik/chart
   template:
     metadata:
-      name: 'platform-{{path.basename}}'
+      name: 'platform-{{name}}'
     spec:
       # Security: avoid templating the project field from git-controlled inputs.
       project: platform
@@ -21,9 +50,14 @@ spec:
         repoURL: https://github.com/YOUR_GH_USER/talos-platform.git
         targetRevision: main
         path: '{{path}}'
+        helm:
+          valueFiles:
+            - values.yaml
+            - ../../../clusters/homelab/values/{{name}}.yaml
+          ignoreMissingValueFiles: true
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{path.basename}}'
+        namespace: '{{namespace}}'
       syncPolicy:
         automated:
           prune: true

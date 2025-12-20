@@ -1,18 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: platform-oci
+  name: platform-oci-runners
   namespace: argocd
 spec:
   generators:
     - list:
         elements:
-          - name: forgejo
-            namespace: forgejo
-            repoURL: oci://code.forgejo.org/forgejo-helm
-            chart: forgejo
-            version: 15.0.3
-            ingressHost: forgejo.magomago.moe
+          - name: forgejo-runner
+            namespace: forgejo-runner
+            repoURL: oci://codeberg.org/wrenix/helm-charts
+            chart: forgejo-runner
+            version: 0.6.17
   template:
     metadata:
       name: 'platform-{{name}}'
@@ -25,18 +24,8 @@ spec:
         helm:
           releaseName: '{{name}}'
           values: |
-            ingress:
-              enabled: true
-              className: nginx
-              hosts:
-                - host: '{{ingressHost}}'
-                  paths:
-                    - path: /
-                      pathType: Prefix
-                      port: http
-            gitea:
-              admin:
-                existingSecret: forgejo-admin
+            # NOTE: Configure the Forgejo URL and runner registration token before enabling.
+            # See README for required values and secret creation.
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{namespace}}'

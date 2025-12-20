@@ -1,0 +1,6 @@
+# Per-cluster overrides for ingress-nginx
+# Use LoadBalancer when MetalLB is configured.
+ingress-nginx:
+  controller:
+    service:
+      type: LoadBalancer
