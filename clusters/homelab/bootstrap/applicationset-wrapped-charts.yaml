@@ -16,30 +16,9 @@ spec:
           - name: porkbun-webhook
             namespace: cert-manager
             path: apps/porkbun-webhook/chart
-          - name: metrics-server
-            namespace: kube-system
-            path: apps/metrics-server/chart
-          - name: kube-prometheus-stack
-            namespace: monitoring
-            path: apps/kube-prometheus-stack/chart
-          - name: loki
-            namespace: monitoring
-            path: apps/loki/chart
-          - name: external-secrets
-            namespace: external-secrets
-            path: apps/external-secrets/chart
-          - name: vault
-            namespace: vault
-            path: apps/vault/chart
-          - name: longhorn
-            namespace: longhorn-system
-            path: apps/longhorn/chart
           - name: metallb
             namespace: metallb-system
             path: apps/metallb/chart
-          - name: authentik
-            namespace: authentik
-            path: apps/authentik/chart
   template:
     metadata:
       name: 'platform-{{name}}'

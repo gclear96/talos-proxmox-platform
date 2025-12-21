@@ -48,14 +48,10 @@ Wrapper-chart apps are deployed to fixed namespaces for production-style separat
 - `ingress-nginx` → `ingress-nginx`
 - `cert-manager` → `cert-manager`
 - `porkbun-webhook` → `cert-manager`
-- `metrics-server` → `kube-system`
-- `kube-prometheus-stack` → `monitoring`
-- `loki` → `monitoring`
-- `external-secrets` → `external-secrets`
-- `vault` → `vault`
-- `longhorn` → `longhorn-system`
 - `metallb` → `metallb-system`
-- `authentik` → `authentik`
+  
+Additional apps are currently disabled in the ApplicationSets and can be re-enabled
+once the core networking + TLS baseline is validated.
 
 ## Forgejo admin secret (no secrets in Git)
 

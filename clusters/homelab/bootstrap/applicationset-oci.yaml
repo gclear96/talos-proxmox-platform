@@ -6,13 +6,14 @@ metadata:
 spec:
   generators:
     - list:
-        elements:
-          - name: forgejo
-            namespace: forgejo
-            repoURL: oci://code.forgejo.org/forgejo-helm
-            chart: forgejo
-            version: 15.0.3
-            ingressHost: forgejo.magomago.moe
+        elements: []
+        # Enable Forgejo by adding an element like:
+        # - name: forgejo
+        #   namespace: forgejo
+        #   repoURL: oci://code.forgejo.org/forgejo-helm
+        #   chart: forgejo
+        #   version: 15.0.3
+        #   ingressHost: forgejo.magomago.moe
   template:
     metadata:
       name: 'platform-{{name}}'

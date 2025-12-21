@@ -8,3 +8,4 @@ resources:
   - applicationset-oci-runners.yaml
   - argocd-ingress.yaml
   - namespace-longhorn-system.yaml
+  - namespace-metallb-system.yaml

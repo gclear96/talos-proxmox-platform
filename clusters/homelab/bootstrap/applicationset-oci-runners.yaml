@@ -6,12 +6,13 @@ metadata:
 spec:
   generators:
     - list:
-        elements:
-          - name: forgejo-runner
-            namespace: forgejo-runner
-            repoURL: oci://codeberg.org/wrenix/helm-charts
-            chart: forgejo-runner
-            version: 0.6.17
+        elements: []
+        # Enable Forgejo runner by adding an element like:
+        # - name: forgejo-runner
+        #   namespace: forgejo-runner
+        #   repoURL: oci://codeberg.org/wrenix/helm-charts
+        #   chart: forgejo-runner
+        #   version: 0.6.17
   template:
     metadata:
       name: 'platform-{{name}}'
