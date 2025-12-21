@@ -95,7 +95,8 @@ Porkbun is not a built-in cert-manager DNS provider, so a Porkbun DNS-01 webhook
 the `porkbun-webhook` chart. The webhook group name is set to `acme.porkbun.magomago.moe` in
 `clusters/homelab/values/porkbun-webhook.yaml`, and the ClusterIssuers reference it. The
 `certManager.serviceAccountName` value must match the cert-manager Helm release name (this repo
-uses `platform-cert-manager`).
+uses `platform-cert-manager`). `certManager.secretName` should match the Porkbun API secret name
+(`porkbun-key`).
 
 Create the DNS-01 secret manually (no secrets in Git):
 

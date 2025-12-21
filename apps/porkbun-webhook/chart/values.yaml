@@ -11,6 +11,8 @@ groupName: acme.mycompany.com
 certManager:
   namespace: cert-manager
   serviceAccountName: cert-manager
+  # Optional: restrict secret read to this name when set.
+  secretName: ""
 
 image:
   repository: ghcr.io/mdonoughe/porkbun-webhook
