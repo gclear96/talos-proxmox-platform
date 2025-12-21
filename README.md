@@ -109,7 +109,8 @@ kubectl -n cert-manager create secret generic porkbun-key \
 ## App prerequisites and follow-ups
 
 - MetalLB: IP pools and advertisements are configured in `clusters/homelab/values/metallb.yaml`
-  (you can set `l2Advertisements[].interfaces` to pin ARP announcements to a specific NIC, e.g. `ens18`).
+  (you can set `l2Advertisements[].interfaces` to pin ARP announcements to a specific NIC, e.g. `ens18`,
+  and `l2Advertisements[].nodeSelectors` to pin announcements to a labeled node).
 - Longhorn: requires node prerequisites (iSCSI, kernel modules, and Talos extensions).
 - Vault: configure storage backend and unseal strategy; defaults are not production-ready.
 - Authentik: set up database, email, and ingress settings before exposing it.
