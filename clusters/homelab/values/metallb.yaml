@@ -12,6 +12,3 @@ l2Advertisements:
       - default-pool
     interfaces:
       - ens18
-    nodeSelectors:
-      - matchLabels:
-          metallb-speaker: "true"
