@@ -1,0 +1,32 @@
+{{- if .Values.clusterIssuers }}
+{{- range .Values.clusterIssuers }}
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: {{ .name }}
+spec:
+  acme:
+    email: {{ .email }}
+    server: {{ .server }}
+    privateKeySecretRef:
+      name: {{ .privateKeySecretRef }}
+    solvers:
+      - selector:
+          dnsZones:
+{{- range .dnsZones }}
+            - {{ . }}
+{{- end }}
+        dns01:
+          webhook:
+            groupName: {{ .webhook.groupName }}
+            solverName: {{ .webhook.solverName }}
+            config:
+              apiKeySecretRef:
+                name: {{ .webhook.apiKeySecretRef.name }}
+                key: {{ .webhook.apiKeySecretRef.key }}
+              secretKeySecretRef:
+                name: {{ .webhook.secretKeySecretRef.name }}
+                key: {{ .webhook.secretKeySecretRef.key }}
+---
+{{- end }}
+{{- end }}

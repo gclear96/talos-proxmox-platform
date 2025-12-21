@@ -1,0 +1,35 @@
+# Per-cluster overrides for cert-manager
+cert-manager:
+  installCRDs: true
+
+clusterIssuers:
+  - name: letsencrypt-staging
+    email: gclear96@gmail.com
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef: letsencrypt-staging
+    dnsZones:
+      - magomago.moe
+    webhook:
+      groupName: acme.porkbun.magomago.moe
+      solverName: porkbun
+      apiKeySecretRef:
+        name: porkbun-key
+        key: api-key
+      secretKeySecretRef:
+        name: porkbun-key
+        key: secret-key
+  - name: letsencrypt-prod
+    email: gclear96@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef: letsencrypt-prod
+    dnsZones:
+      - magomago.moe
+    webhook:
+      groupName: acme.porkbun.magomago.moe
+      solverName: porkbun
+      apiKeySecretRef:
+        name: porkbun-key
+        key: api-key
+      secretKeySecretRef:
+        name: porkbun-key
+        key: secret-key

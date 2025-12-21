@@ -6,7 +6,5 @@ resources:
   - applicationset-wrapped-charts.yaml
   - applicationset-oci.yaml
   - applicationset-oci-runners.yaml
-  - clusterissuers.yaml
   - argocd-ingress.yaml
   - namespace-longhorn-system.yaml
-  - metallb-address-pool.yaml

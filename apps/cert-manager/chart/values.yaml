@@ -1,3 +1,6 @@
 # Values for the upstream dependency chart: cert-manager
 cert-manager:
   installCRDs: true
+
+# Optional ClusterIssuer resources rendered by this wrapper chart.
+clusterIssuers: []

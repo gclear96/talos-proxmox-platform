@@ -1,0 +1,35 @@
+{{- if .Values.addressPools }}
+{{- range .Values.addressPools }}
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  addresses:
+{{- range .addresses }}
+    - {{ . }}
+{{- end }}
+{{- if hasKey . "autoAssign" }}
+  autoAssign: {{ .autoAssign }}
+{{- end }}
+---
+{{- end }}
+{{- end }}
+{{- if .Values.l2Advertisements }}
+{{- range .Values.l2Advertisements }}
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+{{- if .ipAddressPools }}
+  ipAddressPools:
+{{- range .ipAddressPools }}
+    - {{ . }}
+{{- end }}
+{{- end }}
+---
+{{- end }}
+{{- end }}

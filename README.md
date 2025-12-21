@@ -91,8 +91,10 @@ Missing files are ignored, so you only need overrides for the apps you customize
 
 ## Cert-manager ClusterIssuers (DNS-01)
 
-Two stub ClusterIssuers are included in `clusters/homelab/bootstrap/clusterissuers.yaml`:
-`letsencrypt-staging` and `letsencrypt-prod`. They are configured for DNS-01 via a webhook placeholder.
+ClusterIssuers are rendered by the cert-manager wrapper chart using per-cluster values in
+`clusters/homelab/values/cert-manager.yaml`. This ensures the CRDs are installed before the
+ClusterIssuer resources are applied.
+
 Porkbun is not a built-in cert-manager DNS provider, so a Porkbun DNS-01 webhook is included via
 the `porkbun-webhook` chart. The webhook group name is set to `acme.porkbun.magomago.moe` in
 `clusters/homelab/values/porkbun-webhook.yaml`, and the ClusterIssuers reference it.
@@ -107,7 +109,7 @@ kubectl -n cert-manager create secret generic porkbun-key \
 
 ## App prerequisites and follow-ups
 
-- MetalLB: `clusters/homelab/bootstrap/metallb-address-pool.yaml` contains a default pool; adjust if needed.
+- MetalLB: IP pools and advertisements are configured in `clusters/homelab/values/metallb.yaml`.
 - Longhorn: requires node prerequisites (iSCSI, kernel modules, and Talos extensions).
 - Vault: configure storage backend and unseal strategy; defaults are not production-ready.
 - Authentik: set up database, email, and ingress settings before exposing it.

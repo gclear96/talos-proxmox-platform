@@ -1,2 +1,6 @@
 # Values for the upstream dependency chart: metallb
 metallb: {}
+
+# Optional MetalLB CRs rendered by this wrapper chart.
+addressPools: []
+l2Advertisements: []

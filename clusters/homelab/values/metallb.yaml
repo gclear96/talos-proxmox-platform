@@ -1,0 +1,12 @@
+# Per-cluster overrides for MetalLB
+metallb: {}
+
+addressPools:
+  - name: default-pool
+    addresses:
+      - 192.168.50.220-192.168.50.230
+
+l2Advertisements:
+  - name: default-adv
+    ipAddressPools:
+      - default-pool
