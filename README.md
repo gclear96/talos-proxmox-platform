@@ -115,12 +115,12 @@ kubectl -n cert-manager create secret generic porkbun-key \
 - Vault: configure storage backend and unseal strategy; defaults are not production-ready.
 - Authentik: set up database, email, and ingress settings before exposing it.
 
-## Argo CD ingress (staging cert)
+## Argo CD ingress (prod cert)
 
 An Argo CD ingress is defined in `clusters/homelab/bootstrap/argocd-ingress.yaml`:
 
 - Host: `argocd.k8s.magomago.moe`
-- TLS: cert-manager `letsencrypt-staging` (secret `argocd-tls-staging`)
+- TLS: cert-manager `letsencrypt-prod` (secret `argocd-tls-prod`)
 - Backend: `argo-cd-argocd-server` on port 443 (HTTPS)
 
 Point `argocd.k8s.magomago.moe` to your ingress LoadBalancer IP, then verify:

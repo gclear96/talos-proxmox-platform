@@ -4,3 +4,23 @@ longhorn:
   preUpgradeChecker:
     jobEnabled: false
     upgradeVersionCheck: false
+
+  persistence:
+    defaultClass: true
+    defaultClassReplicaCount: 3
+
+  defaultSettings:
+    # Use default Longhorn data path on each node
+    defaultDataPath: /var/lib/longhorn
+    # Reserve 10% of disk space on the default disk
+    storageReservedPercentageForDefaultDisk: 10
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    host: longhorn.k8s.magomago.moe
+    tls: true
+    tlsSecret: longhorn-tls
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"

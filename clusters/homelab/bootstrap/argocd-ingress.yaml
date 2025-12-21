@@ -4,7 +4,7 @@ metadata:
   name: argocd
   namespace: argocd
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-staging
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
@@ -12,7 +12,7 @@ spec:
   tls:
     - hosts:
         - argocd.k8s.magomago.moe
-      secretName: argocd-tls-staging
+      secretName: argocd-tls-prod
   rules:
     - host: argocd.k8s.magomago.moe
       http:
