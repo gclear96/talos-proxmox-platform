@@ -47,7 +47,7 @@ spec:
       # Security: avoid templating the project field from git-controlled inputs.
       project: platform
       source:
-        repoURL: https://github.com/YOUR_GH_USER/talos-platform.git
+        repoURL: https://github.com/gclear96/talos-proxmox-platform.git
         targetRevision: main
         path: '{{path}}'
         helm:
