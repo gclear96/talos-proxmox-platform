@@ -20,7 +20,7 @@ ApplicationSet (`clusters/homelab/bootstrap/applicationset-oci.yaml`).
 - Update `clusters/homelab/bootstrap/applicationset-oci.yaml` (Forgejo `ingressHost`, chart version if desired).
 - Update `clusters/homelab/bootstrap/applicationset-oci-runners.yaml` with your Forgejo runner config once Forgejo is up.
 - Set per-cluster overrides in `clusters/homelab/values/` (example: `ingress-nginx.yaml` for LoadBalancer).
-- If you plan to use cert-manager ACME issuers, edit `clusters/homelab/bootstrap/clusterissuers.yaml` and install a DNS-01 webhook for Porkbun (see below).
+- If you plan to use cert-manager ACME issuers, edit `clusters/homelab/values/cert-manager.yaml` and install a DNS-01 webhook for Porkbun (see below).
 - `hack/set-repourl.sh` can help rewrite repoURL strings during cutover.
 
 ## Currently deployed apps
@@ -93,7 +93,9 @@ ClusterIssuer resources are applied.
 
 Porkbun is not a built-in cert-manager DNS provider, so a Porkbun DNS-01 webhook is included via
 the `porkbun-webhook` chart. The webhook group name is set to `acme.porkbun.magomago.moe` in
-`clusters/homelab/values/porkbun-webhook.yaml`, and the ClusterIssuers reference it.
+`clusters/homelab/values/porkbun-webhook.yaml`, and the ClusterIssuers reference it. The
+`certManager.serviceAccountName` value must match the cert-manager Helm release name (this repo
+uses `platform-cert-manager`).
 
 Create the DNS-01 secret manually (no secrets in Git):
 

@@ -1,3 +1,8 @@
 # Per-cluster overrides for porkbun-webhook
 # Must match ClusterIssuer webhook groupName.
 groupName: acme.porkbun.magomago.moe
+
+certManager:
+  namespace: cert-manager
+  # Matches the cert-manager Helm release name (platform-cert-manager)
+  serviceAccountName: platform-cert-manager
