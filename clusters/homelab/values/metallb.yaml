@@ -10,3 +10,5 @@ l2Advertisements:
   - name: default-adv
     ipAddressPools:
       - default-pool
+    interfaces:
+      - ens18

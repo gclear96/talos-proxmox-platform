@@ -30,6 +30,12 @@ spec:
     - {{ . }}
 {{- end }}
 {{- end }}
+{{- if .interfaces }}
+  interfaces:
+{{- range .interfaces }}
+    - {{ . }}
+{{- end }}
+{{- end }}
 ---
 {{- end }}
 {{- end }}
