@@ -1,0 +1,6 @@
+# Per-cluster overrides for Longhorn
+longhorn:
+  # Disable pre-upgrade checker for GitOps installs (avoids stuck pre-upgrade hook on fresh install)
+  preUpgradeChecker:
+    jobEnabled: false
+    upgradeVersionCheck: false

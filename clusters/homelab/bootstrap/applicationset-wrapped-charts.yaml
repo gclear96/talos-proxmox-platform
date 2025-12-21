@@ -19,6 +19,9 @@ spec:
           - name: metallb
             namespace: metallb-system
             path: apps/metallb/chart
+          - name: longhorn
+            namespace: longhorn-system
+            path: apps/longhorn/chart
   template:
     metadata:
       name: 'platform-{{name}}'
