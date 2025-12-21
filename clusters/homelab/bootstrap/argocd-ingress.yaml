@@ -11,10 +11,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - argocd.magomago.moe
+        - argocd.k8s.magomago.moe
       secretName: argocd-tls-staging
   rules:
-    - host: argocd.magomago.moe
+    - host: argocd.k8s.magomago.moe
       http:
         paths:
           - path: /

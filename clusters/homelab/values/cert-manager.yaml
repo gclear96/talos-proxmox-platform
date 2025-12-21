@@ -8,7 +8,7 @@ clusterIssuers:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef: letsencrypt-staging
     dnsZones:
-      - magomago.moe
+      - k8s.magomago.moe
     webhook:
       groupName: acme.porkbun.magomago.moe
       solverName: porkbun
@@ -23,7 +23,7 @@ clusterIssuers:
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef: letsencrypt-prod
     dnsZones:
-      - magomago.moe
+      - k8s.magomago.moe
     webhook:
       groupName: acme.porkbun.magomago.moe
       solverName: porkbun

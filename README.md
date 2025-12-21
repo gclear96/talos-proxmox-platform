@@ -67,7 +67,7 @@ kubectl -n forgejo create secret generic forgejo-admin \
   --from-literal=password='REPLACE_ME'
 ```
 
-Forgejo is set to `forgejo.magomago.moe` in `clusters/homelab/bootstrap/applicationset-oci.yaml`.
+Forgejo is set to `forgejo.k8s.magomago.moe` in `clusters/homelab/bootstrap/applicationset-oci.yaml`.
 
 ## Forgejo runner (no secrets in Git)
 
@@ -116,11 +116,11 @@ kubectl -n cert-manager create secret generic porkbun-key \
 
 An Argo CD ingress is defined in `clusters/homelab/bootstrap/argocd-ingress.yaml`:
 
-- Host: `argocd.magomago.moe`
+- Host: `argocd.k8s.magomago.moe`
 - TLS: cert-manager `letsencrypt-staging` (secret `argocd-tls-staging`)
 - Backend: `argo-cd-argocd-server` on port 443 (HTTPS)
 
-Point `argocd.magomago.moe` to your ingress LoadBalancer IP, then verify:
+Point `argocd.k8s.magomago.moe` to your ingress LoadBalancer IP, then verify:
 
 ```bash
 kubectl -n ingress-nginx get svc ingress-nginx-controller
