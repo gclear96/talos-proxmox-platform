@@ -30,3 +30,15 @@ kube-prometheus-stack:
       accessModes:
         - ReadWriteOnce
       size: 5Gi
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      hosts:
+        - grafana.k8s.magomago.moe
+      tls:
+        - secretName: grafana-tls
+          hosts:
+            - grafana.k8s.magomago.moe

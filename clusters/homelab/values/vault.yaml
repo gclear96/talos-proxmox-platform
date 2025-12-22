@@ -1,0 +1,18 @@
+vault:
+  ui:
+    enabled: true
+
+  server:
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      hosts:
+        - host: vault.k8s.magomago.moe
+          paths: []
+      tls:
+        - secretName: vault-tls
+          hosts:
+            - vault.k8s.magomago.moe
