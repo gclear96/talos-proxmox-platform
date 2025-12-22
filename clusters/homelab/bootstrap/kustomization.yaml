@@ -12,5 +12,7 @@ resources:
   - namespace-longhorn-system.yaml
   - namespace-metallb-system.yaml
   - namespace-monitoring.yaml
+  - sa-vault-auth.yaml
+  - rbac-vault-tokenreview.yaml
   - external-secrets-vault-authentik.yaml
   - external-secrets-vault-forgejo.yaml
