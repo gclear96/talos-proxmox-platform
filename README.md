@@ -49,9 +49,16 @@ Wrapper-chart apps are deployed to fixed namespaces for production-style separat
 - `cert-manager` → `cert-manager`
 - `porkbun-webhook` → `cert-manager`
 - `metallb` → `metallb-system`
-  
-Additional apps are currently disabled in the ApplicationSets and can be re-enabled
-once the core networking + TLS baseline is validated.
+- `longhorn` → `longhorn-system`
+- `metrics-server` → `metrics-server`
+- `external-secrets` → `external-secrets`
+- `kube-prometheus-stack` → `monitoring`
+- `loki` → `loki`
+- `vault` → `vault`
+
+Additional apps can be enabled by adding entries to
+`clusters/homelab/bootstrap/applicationset-wrapped-charts.yaml` and creating
+per-app overrides in `clusters/homelab/values/` as needed.
 
 ## Forgejo admin secret (no secrets in Git)
 

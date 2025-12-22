@@ -22,6 +22,21 @@ spec:
           - name: longhorn
             namespace: longhorn-system
             path: apps/longhorn/chart
+          - name: metrics-server
+            namespace: metrics-server
+            path: apps/metrics-server/chart
+          - name: external-secrets
+            namespace: external-secrets
+            path: apps/external-secrets/chart
+          - name: kube-prometheus-stack
+            namespace: monitoring
+            path: apps/kube-prometheus-stack/chart
+          - name: loki
+            namespace: loki
+            path: apps/loki/chart
+          - name: vault
+            namespace: vault
+            path: apps/vault/chart
   template:
     metadata:
       name: 'platform-{{name}}'
