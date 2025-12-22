@@ -52,3 +52,9 @@ spec:
       kind: PriorityClass
     - group: cert-manager.io
       kind: ClusterIssuer
+  # Ignore defaulted fields that cause unnecessary drift.
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      jqPathExpressions:
+        - .spec.revisionHistoryLimit
