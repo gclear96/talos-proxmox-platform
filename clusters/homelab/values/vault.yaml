@@ -3,6 +3,10 @@ vault:
     enabled: true
 
   server:
+    statefulSet:
+      persistentVolumeClaimRetentionPolicy:
+        whenDeleted: Retain
+        whenScaled: Retain
     ingress:
       enabled: true
       ingressClassName: nginx
