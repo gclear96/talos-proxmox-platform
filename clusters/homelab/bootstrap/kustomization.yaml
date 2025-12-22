@@ -9,3 +9,4 @@ resources:
   - argocd-ingress.yaml
   - namespace-longhorn-system.yaml
   - namespace-metallb-system.yaml
+  - namespace-monitoring.yaml
