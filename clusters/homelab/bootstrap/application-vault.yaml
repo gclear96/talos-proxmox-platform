@@ -41,4 +41,7 @@ spec:
         - .spec.template.spec.containers[].resources
         - .spec.template.spec.containers[].terminationMessagePath
         - .spec.template.spec.containers[].terminationMessagePolicy
+        - .spec.volumeClaimTemplates[].apiVersion
+        - .spec.volumeClaimTemplates[].kind
+        - .spec.volumeClaimTemplates[].status
         - .spec.volumeClaimTemplates[].spec.volumeMode
