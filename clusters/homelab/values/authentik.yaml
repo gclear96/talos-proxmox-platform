@@ -1,25 +1,8 @@
 authentik:
-  # Upstream chart generates a Secret from values under `authentik.authentik`.
-  # We keep real secrets in Vault and inject them via `global.env` instead.
   authentik:
-    # Required by the chart, but overridden by env from `authentik-env`.
-    secret_key: "__SET_VIA_authentik-env__"
-    postgresql:
-      # Required by the chart, but overridden by env + the Postgres subchart secret.
-      password: "__SET_VIA_authentik-env__"
-
-  global:
-    env:
-      - name: AUTHENTIK_SECRET_KEY
-        valueFrom:
-          secretKeyRef:
-            name: authentik-env
-            key: AUTHENTIK_SECRET_KEY
-      - name: AUTHENTIK_POSTGRESQL__PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: authentik-env
-            key: AUTHENTIK_POSTGRESQL__PASSWORD
+    # The upstream chart hard-references a config Secret named after the Helm release
+    # (envFrom secretRef). We provision that Secret via External Secrets instead.
+    enabled: false
 
   server:
     ingress:
@@ -29,15 +12,13 @@ authentik:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         nginx.ingress.kubernetes.io/ssl-redirect: "true"
       hosts:
-        - host: authentik.k8s.magomago.moe
-          paths:
-            - path: /
-              pathType: Prefix
+        - authentik.k8s.magomago.moe
       tls:
         - secretName: authentik-tls
           hosts:
             - authentik.k8s.magomago.moe
 
   postgresql:
+    enabled: true
     auth:
       existingSecret: authentik-postgresql

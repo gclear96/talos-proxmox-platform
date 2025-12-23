@@ -9,7 +9,7 @@ spec:
         elements:
           - name: forgejo
             namespace: forgejo
-            repoURL: oci://code.forgejo.org/forgejo-helm
+            repoURL: oci://code.forgejo.org/forgejo-helm/forgejo
             chart: forgejo
             version: 15.0.3
             ingressHost: forgejo.k8s.magomago.moe
