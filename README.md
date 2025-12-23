@@ -115,6 +115,14 @@ kubectl -n cert-manager create secret generic porkbun-key \
 - Vault: configure storage backend and unseal strategy; defaults are not production-ready.
 - Authentik: database password + secret key are sourced from Vault (`authentik/env`); configure email + initial setup before exposing it broadly.
 
+## GitOps-managed Grafana + Authentik config
+
+- **Grafana provisioning (Git → ConfigMap → sidecar)**:
+  - Datasources: add YAMLs under `apps/kube-prometheus-stack/chart/grafana/datasources/` → rendered into `ConfigMap/grafana-datasources` (labelled `grafana_datasource=1`).
+  - Dashboards: add JSON under `apps/kube-prometheus-stack/chart/grafana/dashboards/` → rendered into `ConfigMap/grafana-dashboards` (labelled `grafana_dashboard=1`).
+- **Authentik blueprints (Git → ConfigMap → worker)**: add blueprint YAMLs under `apps/authentik/chart/blueprints/` and they are rendered into `ConfigMap/authentik-blueprints`, mounted and applied by the authentik worker via `clusters/homelab/values/authentik.yaml`.
+- Notes / references: `docs/grafana-authentik-cicd.md`
+
 ## Argo CD ingress (prod cert)
 
 An Argo CD ingress is defined in `clusters/homelab/bootstrap/argocd-ingress.yaml`:
