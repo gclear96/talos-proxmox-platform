@@ -1,1 +1,5 @@
 *.bak
+
+# Helm dependency artifacts (generated via `helm dependency build`)
+apps/*/chart/Chart.lock
+apps/*/chart/charts/

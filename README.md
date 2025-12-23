@@ -62,17 +62,10 @@ per-app overrides in `clusters/homelab/values/` as needed.
 
 ## Forgejo admin secret (no secrets in Git)
 
-The Forgejo chart is configured to read admin credentials from a pre-created Secret named `forgejo-admin`.
-Create it manually (or via SealedSecrets later) before the Forgejo Application syncs.
+The Forgejo chart is configured to read admin credentials from a Secret named `forgejo-admin`.
 
-Example:
-
-```bash
-kubectl create namespace forgejo
-kubectl -n forgejo create secret generic forgejo-admin \
-  --from-literal=username=forgejo_admin \
-  --from-literal=password='REPLACE_ME'
-```
+In this repo, `clusters/homelab/bootstrap/external-secrets-vault-forgejo.yaml` provisions it via
+External Secrets + Vault (Kubernetes auth).
 
 Forgejo is set to `forgejo.k8s.magomago.moe` in `clusters/homelab/bootstrap/applicationset-oci.yaml`.
 
@@ -120,7 +113,7 @@ kubectl -n cert-manager create secret generic porkbun-key \
   `l2Advertisements[].nodeSelectors` are intentionally unset to keep HA).
 - Longhorn: requires node prerequisites (iSCSI, kernel modules, and Talos extensions).
 - Vault: configure storage backend and unseal strategy; defaults are not production-ready.
-- Authentik: set up database, email, and ingress settings before exposing it.
+- Authentik: database password + secret key are sourced from Vault (`authentik/env`); configure email + initial setup before exposing it broadly.
 
 ## Argo CD ingress (prod cert)
 

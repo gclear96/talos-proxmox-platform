@@ -34,6 +34,9 @@ spec:
           - name: loki
             namespace: loki
             path: apps/loki/chart
+          - name: authentik
+            namespace: authentik
+            path: apps/authentik/chart
   template:
     metadata:
       name: 'platform-{{name}}'

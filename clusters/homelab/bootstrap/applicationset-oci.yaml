@@ -6,14 +6,13 @@ metadata:
 spec:
   generators:
     - list:
-        elements: []
-        # Enable Forgejo by adding an element like:
-        # - name: forgejo
-        #   namespace: forgejo
-        #   repoURL: oci://code.forgejo.org/forgejo-helm
-        #   chart: forgejo
-        #   version: 15.0.3
-        #   ingressHost: forgejo.k8s.magomago.moe
+        elements:
+          - name: forgejo
+            namespace: forgejo
+            repoURL: oci://code.forgejo.org/forgejo-helm
+            chart: forgejo
+            version: 15.0.3
+            ingressHost: forgejo.k8s.magomago.moe
   template:
     metadata:
       name: 'platform-{{name}}'
@@ -29,12 +28,19 @@ spec:
             ingress:
               enabled: true
               className: nginx
+              annotations:
+                cert-manager.io/cluster-issuer: letsencrypt-prod
+                nginx.ingress.kubernetes.io/ssl-redirect: "true"
               hosts:
                 - host: '{{ingressHost}}'
                   paths:
                     - path: /
                       pathType: Prefix
                       port: http
+              tls:
+                - secretName: forgejo-tls
+                  hosts:
+                    - '{{ingressHost}}'
             gitea:
               admin:
                 existingSecret: forgejo-admin
