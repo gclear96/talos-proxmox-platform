@@ -45,3 +45,6 @@ spec:
         - .spec.volumeClaimTemplates[].kind
         - .spec.volumeClaimTemplates[].status
         - .spec.volumeClaimTemplates[].spec.volumeMode
+        - .spec.template.spec.containers
+        - .spec.template.spec.volumes
+        - .spec.volumeClaimTemplates
