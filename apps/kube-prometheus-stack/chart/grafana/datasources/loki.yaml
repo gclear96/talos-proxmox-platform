@@ -1,0 +1,13 @@
+apiVersion: 1
+
+datasources:
+  - name: Loki
+    type: loki
+    uid: loki
+    access: proxy
+    url: http://platform-loki-gateway.loki.svc.cluster.local
+    isDefault: false
+    editable: false
+    jsonData:
+      maxLines: 1000
+

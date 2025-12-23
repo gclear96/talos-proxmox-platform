@@ -1,0 +1,16 @@
+{{- $blueprints := .Files.Glob "blueprints/*.yaml" -}}
+{{- if $blueprints -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: authentik-blueprints
+  labels:
+    app.kubernetes.io/name: authentik
+    app.kubernetes.io/instance: {{ .Release.Name }}
+data:
+{{- range $path, $file := $blueprints }}
+  {{ base $path }}: |-
+{{ $file | toString | nindent 4 }}
+{{- end }}
+{{- end }}
+
