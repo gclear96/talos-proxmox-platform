@@ -36,4 +36,9 @@ spec:
         - .spec.template.spec.serviceAccount
         - .spec.template.spec.hostNetwork
         - .spec.template.spec.volumes[].configMap.defaultMode
+        - .spec.template.spec.containers[].env[].valueFrom.fieldRef.apiVersion
+        - .spec.template.spec.containers[].ports[].protocol
+        - .spec.template.spec.containers[].resources
+        - .spec.template.spec.containers[].terminationMessagePath
+        - .spec.template.spec.containers[].terminationMessagePolicy
         - .spec.volumeClaimTemplates[].spec.volumeMode
