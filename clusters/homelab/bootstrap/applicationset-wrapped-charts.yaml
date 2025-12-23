@@ -34,9 +34,6 @@ spec:
           - name: loki
             namespace: loki
             path: apps/loki/chart
-          - name: vault
-            namespace: vault
-            path: apps/vault/chart
   template:
     metadata:
       name: 'platform-{{name}}'

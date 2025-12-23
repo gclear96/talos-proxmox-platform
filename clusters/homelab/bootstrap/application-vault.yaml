@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-vault
+  namespace: argocd
+spec:
+  project: platform
+  source:
+    repoURL: https://github.com/gclear96/talos-proxmox-platform.git
+    targetRevision: main
+    path: apps/vault/chart
+    helm:
+      valueFiles:
+        - values.yaml
+        - ../../../clusters/homelab/values/vault.yaml
+      ignoreMissingValueFiles: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vault
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      jqPathExpressions:
+        - .spec.revisionHistoryLimit
+        - .spec.template.metadata.annotations
+        - .spec.template.spec.dnsPolicy
+        - .spec.template.spec.restartPolicy
+        - .spec.template.spec.schedulerName
+        - .spec.template.spec.serviceAccount
+        - .spec.template.spec.hostNetwork
+        - .spec.template.spec.volumes[].configMap.defaultMode
+        - .spec.volumeClaimTemplates[].spec.volumeMode

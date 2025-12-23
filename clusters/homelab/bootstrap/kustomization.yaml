@@ -6,6 +6,7 @@ resources:
   - applicationset-wrapped-charts.yaml
   - applicationset-oci.yaml
   - applicationset-oci-runners.yaml
+  - application-vault.yaml
   - argocd-ingress.yaml
   - namespace-authentik.yaml
   - namespace-forgejo.yaml
