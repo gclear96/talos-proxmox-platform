@@ -4,11 +4,6 @@ authentik:
     # (envFrom secretRef). We provision that Secret via External Secrets instead.
     enabled: false
 
-  # Mounted from ConfigMaps/Secrets and applied by the authentik worker.
-  blueprints:
-    configMaps:
-      - authentik-blueprints
-
   server:
     ingress:
       enabled: true

@@ -120,7 +120,9 @@ kubectl -n cert-manager create secret generic porkbun-key \
 - **Grafana provisioning (Git → ConfigMap → sidecar)**:
   - Datasources: add YAMLs under `apps/kube-prometheus-stack/chart/grafana/datasources/` → rendered into `ConfigMap/grafana-datasources` (labelled `grafana_datasource=1`).
   - Dashboards: add JSON under `apps/kube-prometheus-stack/chart/grafana/dashboards/` → rendered into `ConfigMap/grafana-dashboards` (labelled `grafana_dashboard=1`).
-- **Authentik blueprints (Git → ConfigMap → worker)**: add blueprint YAMLs under `apps/authentik/chart/blueprints/` and they are rendered into `ConfigMap/authentik-blueprints`, mounted and applied by the authentik worker via `clusters/homelab/values/authentik.yaml`.
+## Authentik configuration
+
+Authentik instance configuration will be managed via an external Terraform-based repo going forward.
 - Notes / references: `docs/grafana-authentik-cicd.md`
 
 ## Argo CD ingress (prod cert)

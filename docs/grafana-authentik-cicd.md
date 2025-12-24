@@ -1,7 +1,6 @@
-**A large chunk** of both Grafana and authentik can be managed “as code” in a GitOps workflow (Helm/Kustomize + ArgoCD). The trick is to lean on:
+**A large chunk** of Grafana can be managed “as code” in a GitOps workflow (Helm/Kustomize + ArgoCD) using:
 
 * **Grafana provisioning** (files mounted into `provisioning/…`)
-* **authentik blueprints** (declarative YAML objects, mounted into the worker)
 * Kubernetes-native secret management (SealedSecrets / External Secrets / SOPS, etc.)
 
 Below is a practical guide and an honest view of what’s “fully declarative” vs. what still tends to be “stateful / API-driven”.
@@ -29,19 +28,9 @@ Below is a practical guide and an honest view of what’s “fully declarative�
 
 ### authentik
 
-authentik is *designed* for declarative management via **Blueprints**:
+authentik configuration is **not** managed in this repo anymore.
 
-* Blueprints are YAML files that can “template, automate, and distribute” authentik configuration without external tools. ([docs.goauthentik.io][5])
-* Blueprints can be **mounted into the authentik worker** and are applied regularly (docs mention every ~60 minutes for blueprint instances). ([version-2025-4.goauthentik.io][6])
-* Blueprints support “YAML tags” so you can pull sensitive values from **environment variables** (`!Env`) or **files** (`!File`) instead of hardcoding secrets in Git. ([docs.goauthentik.io][7])
-* Helm chart support: mount blueprint YAMLs from **ConfigMaps and Secrets** into `/blueprints/mounted/...` for automatic discovery/application. ([DeepWiki][8])
-
-**Limits to expect:**
-
-* If you “bootstrap in UI then export,” note that **write-only fields (e.g., OAuth provider secret key)** won’t be included in exported blueprints. ([docs.goauthentik.io][9])
-  (So you’ll need to supply those via `!Env`/`!File` or another secret injection strategy.)
-* Some objects won’t export cleanly due to dependencies; expect some cleanup/splitting after export. ([docs.goauthentik.io][9])
-* Runtime state (sessions, tokens created by users, etc.) is not something you “declaratively provision” in a meaningful way.
+We plan to manage authentik via Terraform (authentik provider) in a separate repo. Keep this repo focused on platform services and their ingress/secret wiring.
 
 ---
 
@@ -72,79 +61,15 @@ apps/
         rules.yaml
   authentik/
     values.yaml
-    blueprints/
-      cm/
-        base-flows.yaml
-        apps-grafana.yaml
-      secret/
-        oauth-secrets.yaml
 ```
 
-Keep *renderable text* (values, provisioning, blueprints) in Git. Generate Kubernetes Secrets via your secret toolchain (SOPS, External Secrets, etc.).
+Keep *renderable text* (values, provisioning) in Git. Generate Kubernetes Secrets via your secret toolchain (SOPS, External Secrets, etc.).
 
 ---
 
-## 2) authentik: make it declarative with Blueprints
+## 2) authentik configuration (Terraform)
 
-### 2.1 Configure authentik via Helm + env vars
-
-authentik’s core runtime config is explicitly designed to be set via **environment variables**. ([docs.goauthentik.io][10])
-
-Use Helm values (via ArgoCD) to set:
-
-* ingress/hostnames
-* database connectivity
-* email, logging, etc.
-* mounting blueprints (next section)
-
-### 2.2 Mount blueprints from ConfigMaps/Secrets
-
-The Helm chart supports listing ConfigMaps/Secrets that contain `.yaml` keys, which get mounted under `/blueprints/mounted/...` and discovered/applied. ([DeepWiki][8])
-
-Example Helm values snippet:
-
-```yaml
-blueprints:
-  configMaps:
-    - authentik-blueprints
-  secrets:
-    - authentik-blueprints-secret
-```
-
-Create:
-
-* `ConfigMap/authentik-blueprints` with non-sensitive blueprint YAMLs
-* `Secret/authentik-blueprints-secret` with sensitive blueprint YAMLs (or just references to env/file tags)
-
-### 2.3 Write blueprints that auto-instantiate
-
-Blueprint file structure supports an “auto instantiate” annotation (defaults to true). ([docs.goauthentik.io][11])
-
-So your blueprint YAML can include something like:
-
-```yaml
-metadata:
-  name: "apps-grafana"
-  annotations:
-    blueprints.goauthentik.io/instantiate: "true"
-```
-
-### 2.4 Handle secrets correctly
-
-Because exported blueprints omit write-only fields like OAuth provider secrets ([docs.goauthentik.io][9]), design your blueprints to *reference* secrets:
-
-* `!Env` reads from env vars ([docs.goauthentik.io][7])
-* `!File` reads from a mounted file ([docs.goauthentik.io][7])
-
-This lets you keep OAuth client secrets, signing keys, etc. out of Git while still being fully reproducible.
-
-### 2.5 Bootstrap from an existing instance (recommended workflow)
-
-1. Configure authentik once (UI) in a scratch/test instance.
-2. Export most objects to a blueprint with `ak export_blueprint`. ([docs.goauthentik.io][9])
-3. Split that export into multiple files (flows vs. apps vs. providers).
-4. Replace missing write-only secrets with `!Env` / `!File`. ([docs.goauthentik.io][7])
-5. Commit + let ArgoCD roll it out.
+authentik is managed outside this repo using Terraform. Keep Helm values limited to runtime wiring (ingress, database, logging), and manage identity resources (apps, providers, flows, policies) via Terraform.
 
 ---
 
@@ -170,7 +95,7 @@ For Grafana Alerting provisioning:
 
 This is usually two pieces:
 
-1. **authentik blueprint** creates the application/provider + mappings/scopes.
+1. **Terraform** creates the authentik application/provider + mappings/scopes.
 2. **grafana.ini (or Helm values)** configures generic OAuth/OIDC against authentik.
 
 Because endpoint details and client settings vary by authentik provider setup, a robust approach is:
@@ -192,10 +117,7 @@ Provisioning is great for “platform config,” but anything that’s inherentl
 
 ### authentik gaps
 
-Blueprints cover a lot, but:
-
-* Exports won’t include write-only secrets ([docs.goauthentik.io][9]) → always plan secret injection.
-* Some objects may not export due to dependencies ([docs.goauthentik.io][9]) → expect cleanup.
+Terraform will own authentik state; treat the authentik UI as read-only except for debugging.
 
 ---
 
@@ -203,8 +125,7 @@ Blueprints cover a lot, but:
 
 * [ ] ArgoCD deploys **Helm releases** for Grafana + authentik.
 * [ ] All Grafana **datasources/dashboards/alerting** come from provisioning files in Git. ([Grafana Labs][1])
-* [ ] authentik **apps/providers/flows/policies** come from blueprints mounted from ConfigMaps/Secrets. ([DeepWiki][8])
-* [ ] Secrets are injected via `!Env` / `!File` in authentik blueprints (and via K8s secrets for Grafana). ([docs.goauthentik.io][7])
+* [ ] authentik **apps/providers/flows/policies** come from Terraform.
 * [ ] You have a stance on “UI changes”: either forbid them for provisioned resources, or explicitly decide where state is allowed to live.
 
 ---
@@ -216,11 +137,4 @@ Blueprints cover a lot, but:
 "
 [4]: https://grafana.com/docs/grafana/latest/as-code/observability-as-code/provision-resources/ "Provision resources and sync dashboards | Grafana documentation
 "
-[5]: https://docs.goauthentik.io/customize/blueprints/ "Blueprints | authentik"
-[6]: https://version-2025-4.goauthentik.io/docs/customize/blueprints/?utm_source=chatgpt.com "Blueprints - authentik"
-[7]: https://docs.goauthentik.io/customize/blueprints/v1/tags/ "YAML Tags | authentik"
-[8]: https://deepwiki.com/goauthentik/helm/2.5.2-blueprints-configuration "Blueprints Configuration | goauthentik/helm | DeepWiki"
-[9]: https://docs.goauthentik.io/customize/blueprints/export/ "Export configurations to blueprints | authentik"
 [10]: https://docs.goauthentik.io/install-config/configuration/ "Configuration | authentik"
-[11]: https://docs.goauthentik.io/customize/blueprints/v1/structure/?utm_source=chatgpt.com "File structure - authentik"
-
