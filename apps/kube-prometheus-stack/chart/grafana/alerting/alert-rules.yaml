@@ -1,0 +1,46 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: platform-default
+    folder: Platform
+    interval: 60s
+    rules:
+      - uid: platform-gitops-placeholder
+        title: GitOps placeholder (always OK)
+        condition: A
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: "-100"
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 3
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - A
+                  reducer:
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: "-100"
+              expression: 1==0
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: math
+        noDataState: OK
+        execErrState: Error
+        for: 60s
+        annotations:
+          summary: This rule never fires; replace with real alerts.
+        labels:
+          severity: info

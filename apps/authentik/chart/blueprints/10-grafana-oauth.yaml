@@ -1,0 +1,29 @@
+version: 1
+metadata:
+  name: grafana-oauth
+  annotations:
+    blueprints.goauthentik.io/instantiate: "true"
+entries:
+  - model: authentik_providers_oauth2.oauth2provider
+    identifiers:
+      name: Grafana
+    attrs:
+      name: Grafana
+      client_id: grafana
+      client_secret: !Env AUTHENTIK_OAUTH_GRAFANA_CLIENT_SECRET
+      client_type: confidential
+      redirect_uris:
+        - https://grafana.k8s.magomago.moe/login/generic_oauth
+      authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-explicit-consent]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+      include_claims_in_id_token: true
+      issuer_mode: per_provider
+      sub_mode: user_email
+  - model: authentik_core.application
+    identifiers:
+      slug: grafana
+    attrs:
+      name: Grafana
+      slug: grafana
+      provider: !Find [authentik_providers_oauth2.oauth2provider, [name, Grafana]]
+      policy_engine_mode: any

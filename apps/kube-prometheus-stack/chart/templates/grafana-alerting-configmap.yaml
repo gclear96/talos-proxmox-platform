@@ -1,0 +1,15 @@
+{{- $alerting := .Files.Glob "grafana/alerting/*.yaml" -}}
+{{- if $alerting -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-alerting-provisioning
+  labels:
+    app.kubernetes.io/part-of: grafana
+    app.kubernetes.io/instance: {{ .Release.Name }}
+data:
+{{- range $path, $file := $alerting }}
+  {{ base $path }}: |-
+{{ $file | toString | nindent 4 }}
+{{- end }}
+{{- end }}

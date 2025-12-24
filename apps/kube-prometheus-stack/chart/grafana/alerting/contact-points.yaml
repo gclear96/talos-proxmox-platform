@@ -1,0 +1,12 @@
+apiVersion: 1
+
+contactPoints:
+  - orgId: 1
+    name: platform-default
+    receivers:
+      - uid: platform-default-webhook
+        type: webhook
+        settings:
+          url: http://localhost:9000
+          httpMethod: POST
+        disableResolveMessage: false

@@ -23,6 +23,7 @@ kube-prometheus-stack:
               requests:
                 storage: 5Gi
   grafana:
+    envFromSecret: grafana-oauth
     persistence:
       enabled: true
       type: sts
@@ -30,6 +31,29 @@ kube-prometheus-stack:
       accessModes:
         - ReadWriteOnce
       size: 5Gi
+    extraConfigmapMounts:
+      - name: grafana-alerting-provisioning
+        mountPath: /etc/grafana/provisioning/alerting
+        configMap: grafana-alerting-provisioning
+        readOnly: true
+    grafana.ini:
+      server:
+        root_url: https://grafana.k8s.magomago.moe
+      auth:
+        oauth_auto_login: false
+        signout_redirect_url: https://authentik.k8s.magomago.moe/application/o/grafana/end-session/
+      auth.generic_oauth:
+        enabled: true
+        name: Authentik
+        allow_sign_up: true
+        client_id: grafana
+        client_secret: $__env{GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET}
+        scopes: openid profile email
+        auth_url: https://authentik.k8s.magomago.moe/application/o/authorize/
+        token_url: https://authentik.k8s.magomago.moe/application/o/token/
+        api_url: https://authentik.k8s.magomago.moe/application/o/userinfo/
+        use_pkce: true
+        use_refresh_token: true
     ingress:
       enabled: true
       ingressClassName: nginx
