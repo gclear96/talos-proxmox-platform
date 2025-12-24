@@ -31,7 +31,6 @@ spec:
           - name: kube-prometheus-stack
             namespace: monitoring
             path: apps/kube-prometheus-stack/chart
-            helmSkipCrds: true
           - name: loki
             namespace: loki
             path: apps/loki/chart
@@ -49,7 +48,6 @@ spec:
         targetRevision: main
         path: '{{path}}'
         helm:
-          skipCrds: {{ .helmSkipCrds | default false }}
           valueFiles:
             - values.yaml
             - ../../../clusters/homelab/values/{{name}}.yaml
@@ -64,3 +62,10 @@ spec:
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
+  templatePatch: |
+    {{- if eq .name "kube-prometheus-stack" }}
+    spec:
+      source:
+        helm:
+          skipCrds: true
+    {{- end }}
