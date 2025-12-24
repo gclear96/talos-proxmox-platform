@@ -28,9 +28,6 @@ spec:
           - name: external-secrets
             namespace: external-secrets
             path: apps/external-secrets/chart
-          - name: kube-prometheus-stack
-            namespace: monitoring
-            path: apps/kube-prometheus-stack/chart
           - name: loki
             namespace: loki
             path: apps/loki/chart
@@ -62,10 +59,3 @@ spec:
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
-  templatePatch: |
-    {{- if eq .name "kube-prometheus-stack" }}
-    spec:
-      source:
-        helm:
-          skipCrds: true
-    {{- end }}

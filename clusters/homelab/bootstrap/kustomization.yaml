@@ -7,6 +7,7 @@ resources:
   - applicationset-oci.yaml
   - applicationset-oci-runners.yaml
   - application-vault.yaml
+  - application-kube-prometheus-stack.yaml
   - argocd-ingress.yaml
   - namespace-authentik.yaml
   - namespace-forgejo.yaml
