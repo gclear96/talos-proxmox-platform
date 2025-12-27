@@ -5,11 +5,12 @@ metadata:
   namespace: vault
   annotations:
     # Runs from the bootstrap/root app; it must be idempotent and tolerate Vault not being ready yet.
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true,Replace=true
 spec:
   backoffLimit: 6
   template:
     spec:
+      serviceAccountName: platform-vault
       restartPolicy: OnFailure
       volumes:
         # Vault admin token to perform bootstrap writes.
@@ -65,18 +66,6 @@ spec:
               done
               vault status >/dev/null
 
-              # Extract the Kubernetes JWT issuer from this pod's service account token.
-              JWT="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
-              PAYLOAD="$(printf "%s" "${JWT}" | cut -d. -f2 | tr '_-' '/+')"
-              MOD="$(( ${#PAYLOAD} % 4 ))"
-              if [ "${MOD}" -eq 2 ]; then PAYLOAD="${PAYLOAD}=="; elif [ "${MOD}" -eq 3 ]; then PAYLOAD="${PAYLOAD}="; fi
-              JSON="$(printf "%s" "${PAYLOAD}" | base64 -d 2>/dev/null || true)"
-              ISSUER="$(printf "%s" "${JSON}" | sed -n 's/.*\"iss\":\"\\([^\"]*\\)\".*/\\1/p')"
-              if [ -z "${ISSUER}" ]; then
-                echo "Failed to decode service account JWT issuer (iss)."
-                exit 1
-              fi
-
               KUBE_HOST="https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}"
               if [ -f /tokenreview/token ] && [ -f /tokenreview/ca.crt ]; then
                 echo "Configuring Vault Kubernetes auth using platform-vault tokenreview Secret..."
@@ -91,13 +80,12 @@ spec:
               # Ensure the auth method exists at the mount path External Secrets expects: /auth/kubernetes
               vault auth enable -path=kubernetes kubernetes >/dev/null 2>&1 || true
 
-              echo "Writing auth/kubernetes/config (kubernetes_host=${KUBE_HOST}, issuer=${ISSUER})..."
+              echo "Writing auth/kubernetes/config (kubernetes_host=${KUBE_HOST})..."
               vault write auth/kubernetes/config \
                 kubernetes_host="${KUBE_HOST}" \
                 kubernetes_ca_cert="${TR_CA}" \
                 token_reviewer_jwt="${TR_JWT}" \
-                issuer="${ISSUER}" \
-                disable_iss_validation=false
+                disable_iss_validation=true
 
               # Minimal policy for External Secrets reading KV v2 secrets under the `kv/` mount.
               # NOTE: This is intentionally broad for a homelab; tighten paths as needed.
