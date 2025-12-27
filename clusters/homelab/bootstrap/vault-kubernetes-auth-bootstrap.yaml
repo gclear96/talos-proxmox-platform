@@ -66,6 +66,12 @@ spec:
               done
               vault status >/dev/null
 
+              if ! vault token lookup >/dev/null 2>&1; then
+                echo "Vault bootstrap token is not valid (vault token lookup failed)."
+                echo "Recreate the Secret vault/vault-bootstrap-token with a fresh token (avoid copy/paste line-wrap issues)."
+                exit 1
+              fi
+
               KUBE_HOST="https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}"
               if [ -f /tokenreview/token ] && [ -f /tokenreview/ca.crt ]; then
                 echo "Configuring Vault Kubernetes auth using platform-vault tokenreview Secret..."
