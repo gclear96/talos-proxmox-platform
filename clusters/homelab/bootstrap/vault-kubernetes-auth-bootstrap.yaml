@@ -5,7 +5,7 @@ metadata:
   namespace: vault
   annotations:
     # Runs from the bootstrap/root app; it must be idempotent and tolerate Vault not being ready yet.
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true,Replace=true
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true,Force=true
 spec:
   selector:
     matchLabels:
