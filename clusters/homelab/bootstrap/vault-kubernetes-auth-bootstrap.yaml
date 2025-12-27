@@ -7,8 +7,14 @@ metadata:
     # Runs from the bootstrap/root app; it must be idempotent and tolerate Vault not being ready yet.
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true,Replace=true
 spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vault-kubernetes-auth-bootstrap
   backoffLimit: 6
   template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vault-kubernetes-auth-bootstrap
     spec:
       serviceAccountName: platform-vault
       restartPolicy: OnFailure
