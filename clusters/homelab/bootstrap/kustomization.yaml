@@ -19,3 +19,4 @@ resources:
   - external-secrets-vault-authentik.yaml
   - external-secrets-vault-forgejo.yaml
   - external-secrets-vault-monitoring.yaml
+  - vault-kubernetes-auth-bootstrap.yaml
