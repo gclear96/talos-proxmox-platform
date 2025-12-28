@@ -1,6 +1,8 @@
 garage:
   # Replicate each object twice to save space (adjust as desired).
   replicationMode: "2"
+  # We apply the CRD via GitOps; prevent Garage from trying to create/patch it at runtime.
+  kubernetesSkipCrd: true
 
   # Defaults are placeholder domains; these only matter once you enable ingress.
   s3:
