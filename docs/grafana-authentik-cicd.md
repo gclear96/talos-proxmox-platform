@@ -30,7 +30,8 @@ Below is a practical guide and an honest view of what’s “fully declarative�
 
 authentik configuration is **not** managed in this repo anymore.
 
-We plan to manage authentik via Terraform (authentik provider) in a separate repo. Keep this repo focused on platform services and their ingress/secret wiring.
+We manage authentik via Terraform (authentik provider) in a separate repo (`authentik-terraform-repo/` in this workspace).
+Keep this platform repo focused on runtime wiring (Helm values, ingress, database, ExternalSecrets).
 
 ---
 
@@ -70,6 +71,14 @@ Keep *renderable text* (values, provisioning) in Git. Generate Kubernetes Secret
 ## 2) authentik configuration (Terraform)
 
 authentik is managed outside this repo using Terraform. Keep Helm values limited to runtime wiring (ingress, database, logging), and manage identity resources (apps, providers, flows, policies) via Terraform.
+
+Practical bootstrap ordering:
+
+1) Argo CD deploys Authentik (this platform repo) and configures secrets via ExternalSecrets.
+2) After Authentik is reachable, run `authentik-terraform-repo`:
+   - inventory (read-only): `authentik-terraform-repo/scripts/inspect-authentik.sh`
+   - import existing objects: `authentik-terraform-repo/scripts/import-existing.sh`
+   - plan/apply using Garage S3 state (`tf-state` bucket)
 
 ---
 

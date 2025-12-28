@@ -122,8 +122,18 @@ kubectl -n cert-manager create secret generic porkbun-key \
   - Dashboards: add JSON under `apps/kube-prometheus-stack/chart/grafana/dashboards/` → rendered into `ConfigMap/grafana-dashboards` (labelled `grafana_dashboard=1`).
 ## Authentik configuration
 
-Authentik instance configuration will be managed via an external Terraform-based repo going forward.
+Authentik is deployed by this repo (Helm), but **instance configuration** (applications/providers/flows/policies/etc.)
+is managed via Terraform in a separate repo:
+
+- `authentik-terraform-repo/` (this workspace)
 - Notes / references: `docs/grafana-authentik-cicd.md`
+
+Bootstrap flow summary:
+
+1) Argo CD (bootstrap repo) syncs this platform repo and installs Authentik + Forgejo (+ optional runner).
+2) After Authentik is reachable, run Terraform from CI (Forgejo Actions runner) or locally:
+   - `authentik-terraform-repo/scripts/import-existing.sh` (idempotent)
+   - `terraform plan/apply` (state in Garage S3)
 
 ## Argo CD ingress (prod cert)
 
