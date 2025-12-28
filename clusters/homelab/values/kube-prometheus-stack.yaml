@@ -21,7 +21,7 @@ kube-prometheus-stack:
               - ReadWriteOnce
             resources:
               requests:
-                storage: 5Gi
+                storage: 1Gi
   grafana:
     envFromSecret: grafana-oauth
     persistence:
@@ -30,7 +30,7 @@ kube-prometheus-stack:
       storageClassName: longhorn
       accessModes:
         - ReadWriteOnce
-      size: 5Gi
+      size: 2Gi
     extraConfigmapMounts:
       - name: grafana-alerting-provisioning
         mountPath: /etc/grafana/provisioning/alerting
