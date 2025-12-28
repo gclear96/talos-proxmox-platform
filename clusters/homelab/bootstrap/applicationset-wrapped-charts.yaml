@@ -34,6 +34,9 @@ spec:
           - name: authentik
             namespace: authentik
             path: apps/authentik/chart
+          - name: garage
+            namespace: garage
+            path: apps/garage/chart
   template:
     metadata:
       name: 'platform-{{name}}'

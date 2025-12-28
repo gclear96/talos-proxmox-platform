@@ -1,0 +1,11 @@
+{{- if not .Values.garage.kubernetesSkipCrd }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "garage.fullname" . }}
+rules:
+  - apiGroups: [ "deuxfleurs.fr" ]
+    resources: [ "garagenodes" ]
+    verbs: [ "get", "list", "watch" ]
+{{- end }}
+

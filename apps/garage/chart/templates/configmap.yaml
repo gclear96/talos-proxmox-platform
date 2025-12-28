@@ -1,0 +1,17 @@
+{{- if .Values.garage.existingConfigMap -}}
+{{- else -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "garage.fullname" . }}
+  labels:
+    {{- include "garage.labels" . | nindent 4 }}
+data:
+  garage.toml: |
+{{- if .Values.garage.garageTomlString }}
+{{ tpl .Values.garage.garageTomlString . | indent 4 }}
+{{- else }}
+{{ include "garage.toml" . | indent 4 }}
+{{- end }}
+{{- end }}
+

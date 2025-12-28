@@ -1,0 +1,27 @@
+garage:
+  # Replicate each object twice to save space (adjust as desired).
+  replicationMode: "2"
+
+  # Defaults are placeholder domains; these only matter once you enable ingress.
+  s3:
+    api:
+      rootDomain: ".s3.k8s.magomago.moe"
+    web:
+      rootDomain: ".web.k8s.magomago.moe"
+
+deployment:
+  replicaCount: 3
+
+persistence:
+  meta:
+    size: 1Gi
+  data:
+    size: 20Gi
+
+ingress:
+  s3:
+    api:
+      enabled: false
+  web:
+    enabled: false
+

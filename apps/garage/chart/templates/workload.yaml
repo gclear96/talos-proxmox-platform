@@ -1,0 +1,135 @@
+{{- if eq .Values.deployment.kind "StatefulSet" -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "garage.fullname" . }}
+  labels:
+    {{- include "garage.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.deployment.replicaCount }}
+  serviceName: {{ include "garage.fullname" . }}-headless
+  selector:
+    matchLabels:
+      {{- include "garage.selectorLabels" . | nindent 6 }}
+  podManagementPolicy: {{ .Values.deployment.podManagementPolicy }}
+  template:
+    metadata:
+      labels:
+        {{- include "garage.selectorLabels" . | nindent 8 }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if not .Values.garage.kubernetesSkipCrd }}
+      serviceAccountName: {{ include "garage.serviceAccountName" . }}
+      {{- end }}
+      initContainers:
+        - name: init
+          image: "{{ .Values.initImage.repository }}:{{ .Values.initImage.tag }}"
+          imagePullPolicy: {{ .Values.initImage.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              echo "creating config file"
+              cp /config/garage.toml /tmp/garage.toml
+              echo "set rpc_secret"
+              sed -i "s#^secret = .*#secret = \\\"$(cat /garage_secrets/rpc_secret)\\\"#" /tmp/garage.toml
+              echo "done"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: garage-config
+              mountPath: /tmp
+            - name: garage-secrets
+              mountPath: /garage_secrets
+              readOnly: true
+      containers:
+        - name: garage
+          image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          ports:
+            - containerPort: 3900
+              name: s3-api
+              protocol: TCP
+            - containerPort: 3901
+              name: rpc
+              protocol: TCP
+            - containerPort: 3902
+              name: s3-web
+              protocol: TCP
+            - containerPort: 3903
+              name: metrics
+              protocol: TCP
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/garage/data
+            - name: meta
+              mountPath: /var/lib/garage/meta
+            - name: garage-config
+              mountPath: /etc/garage.toml
+              subPath: garage.toml
+              readOnly: true
+          {{- with .Values.environment }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "garage.fullname" . }}
+        - name: garage-config
+          emptyDir: {}
+        - name: garage-secrets
+          secret:
+            secretName: {{ include "garage.fullname" . }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  volumeClaimTemplates:
+    - metadata:
+        name: meta
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.persistence.meta.size }}
+        {{- if .Values.persistence.meta.storageClass }}
+        storageClassName: {{ .Values.persistence.meta.storageClass }}
+        {{- end }}
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.persistence.data.size }}
+        {{- if .Values.persistence.data.storageClass }}
+        storageClassName: {{ .Values.persistence.data.storageClass }}
+        {{- end }}
+{{- end }}
+

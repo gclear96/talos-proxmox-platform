@@ -1,0 +1,72 @@
+{{- if .Values.ingress.s3.api.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "garage.fullname" . }}-s3-api
+  labels:
+    {{- include "garage.labels" . | nindent 4 }}
+  {{- with .Values.ingress.s3.api.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- if .Values.ingress.s3.api.className }}
+  ingressClassName: {{ .Values.ingress.s3.api.className | quote }}
+{{- end }}
+  rules:
+  {{- range .Values.ingress.s3.api.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ include "garage.fullname" $ }}
+                port:
+                  number: {{ $.Values.service.s3.api.port }}
+          {{- end }}
+  {{- end }}
+  {{- with .Values.ingress.s3.api.tls }}
+  tls:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+
+{{- if .Values.ingress.s3.web.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "garage.fullname" . }}-s3-web
+  labels:
+    {{- include "garage.labels" . | nindent 4 }}
+  {{- with .Values.ingress.s3.web.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- if .Values.ingress.s3.web.className }}
+  ingressClassName: {{ .Values.ingress.s3.web.className | quote }}
+{{- end }}
+  rules:
+  {{- range .Values.ingress.s3.web.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ include "garage.fullname" $ }}
+                port:
+                  number: {{ $.Values.service.s3.web.port }}
+          {{- end }}
+  {{- end }}
+  {{- with .Values.ingress.s3.web.tls }}
+  tls:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+

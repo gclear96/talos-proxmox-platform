@@ -1,0 +1,50 @@
+{{- if .Values.monitoring.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "garage.fullname" . }}-metrics
+  labels:
+    {{- include "garage.labels" . | nindent 4 }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "3903"
+spec:
+  ports:
+    - name: metrics
+      port: 3903
+      protocol: TCP
+      targetPort: metrics
+  selector:
+    {{- include "garage.selectorLabels" . | nindent 4 }}
+---
+{{- if .Values.monitoring.metrics.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "garage.fullname" . }}
+  labels:
+    {{- include "garage.labels" . | nindent 4 }}
+  {{- with .Values.monitoring.metrics.serviceMonitor.labels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "garage.selectorLabels" . | nindent 6 }}
+  endpoints:
+    - port: metrics
+      path: {{ .Values.monitoring.metrics.serviceMonitor.path }}
+      interval: {{ .Values.monitoring.metrics.serviceMonitor.interval }}
+      scheme: {{ .Values.monitoring.metrics.serviceMonitor.scheme }}
+      {{- with .Values.monitoring.metrics.serviceMonitor.tlsConfig }}
+      tlsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      scrapeTimeout: {{ .Values.monitoring.metrics.serviceMonitor.scrapeTimeout }}
+      {{- with .Values.monitoring.metrics.serviceMonitor.relabelings }}
+      relabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
+{{- end }}
+
