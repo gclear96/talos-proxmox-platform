@@ -14,9 +14,9 @@ deployment:
 
 persistence:
   meta:
-    size: 1Gi
+    size: 256Mi
   data:
-    size: 20Gi
+    size: 256Mi
 
 ingress:
   s3:
@@ -24,4 +24,3 @@ ingress:
       enabled: false
   web:
     enabled: false
-
