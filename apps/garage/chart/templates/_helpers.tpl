@@ -8,6 +8,7 @@ Expand the name of the chart.
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+If release name contains chart name it will be used as a full name.
 */}}
 {{- define "garage.fullname" -}}
 {{- if .Values.fullnameOverride }}
@@ -20,6 +21,13 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 {{- end }}
+{{- end }}
+
+{{/*
+Create the name of the rpc secret
+*/}}
+{{- define "garage.rpcSecretName" -}}
+{{- printf "%s-rpc-secret" (include "garage.fullname" .) -}}
 {{- end }}
 
 {{/*
@@ -61,44 +69,20 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Create the default garage.toml config
+    Returns given number of random Hex characters.
+    In practice, it generates up to 100 randAlphaNum strings
+    that are filtered from non-hex characters and augmented
+    to the resulting string that is finally trimmed down.
 */}}
-{{- define "garage.toml" -}}
-metadata_dir = "/var/lib/garage/meta"
-data_dir = "/var/lib/garage/data"
-db_engine = "{{ .Values.garage.dbEngine }}"
-block_size = {{ .Values.garage.blockSize }}
-replication_mode = "{{ .Values.garage.replicationMode }}"
-compression_level = {{ .Values.garage.compressionLevel }}
-
-{{- if .Values.garage.metadataAutoSnapshotInterval }}
-metadata_auto_snapshot_interval = "{{ .Values.garage.metadataAutoSnapshotInterval }}"
+{{- define "jupyterhub.randHex" -}}
+    {{- $result := "" }}
+    {{- range $i := until 100 }}
+        {{- if lt (len $result) . }}
+            {{- $rand_list := randAlphaNum . | splitList "" -}}
+            {{- $reduced_list := without $rand_list "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z" "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z" }}
+            {{- $rand_string := join "" $reduced_list }}
+            {{- $result = print $result $rand_string -}}
+        {{- end }}
+    {{- end }}
+    {{- $result | trunc . }}
 {{- end }}
-
-[rpc]
-bind_addr = "{{ .Values.garage.rpcBindAddr }}"
-secret = "{{ .Values.garage.rpcSecret }}"
-{{- if gt (len .Values.garage.bootstrapPeers) 0 }}
-bootstrap_peers = [
-{{- range .Values.garage.bootstrapPeers }}
-"{{.}}",
-{{- end }}
-]
-{{- end }}
-
-[kubernetes_discovery]
-namespace = "{{ .Release.Namespace }}"
-service_name = "{{ include "garage.fullname" . }}-headless"
-skip_crd = {{ .Values.garage.kubernetesSkipCrd }}
-
-[s3_api]
-s3_region = "{{ .Values.garage.s3.api.region }}"
-root_domain = "{{ .Values.garage.s3.api.rootDomain }}"
-api_bind_addr = "[::]:3900"
-
-[s3_web]
-root_domain = "{{ .Values.garage.s3.web.rootDomain }}"
-index = "{{ .Values.garage.s3.web.index }}"
-bind_addr = "[::]:3902"
-{{- end }}
-

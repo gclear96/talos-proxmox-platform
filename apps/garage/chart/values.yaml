@@ -234,4 +234,6 @@ monitoring:
       tlsConfig: {}
       scrapeTimeout: 10s
       relabelings: []
-
+  tracing:
+    # -- specify a sink endpoint for OpenTelemetry Traces, eg. `http://localhost:4317`
+    sink: ""
