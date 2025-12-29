@@ -11,7 +11,7 @@ spec:
   sourceRepos:
     # Restrict to your platform repo(s) + any explicitly-allowed OCI registries.
     # Update these during cutover (GitHub -> Forgejo).
-    - https://github.com/gclear96/talos-proxmox-platform.git
+    - https://forgejo.k8s.magomago.moe/forgejo-admin/talos-proxmox-platform.git
     - https://forgejo.example/YOURORG/talos-platform.git
     - oci://code.forgejo.org/forgejo-helm
     - oci://code.forgejo.org/forgejo-helm/forgejo
