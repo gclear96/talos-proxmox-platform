@@ -6,13 +6,14 @@ metadata:
 spec:
   generators:
     - list:
-        elements: []
-        # Enable Forgejo runner by adding an element like:
-        # - name: forgejo-runner
-        #   namespace: forgejo-runner
-        #   repoURL: oci://codeberg.org/wrenix/helm-charts
-        #   chart: forgejo-runner
-        #   version: 0.6.17
+        elements:
+          - name: forgejo-runner
+            namespace: forgejo-runner
+            repoURL: oci://codeberg.org/wrenix/helm-charts
+            chart: forgejo-runner
+            version: 0.6.17
+            forgejoUrl: https://forgejo.k8s.magomago.moe
+            configSecretName: forgejo-runner-config
   template:
     metadata:
       name: 'platform-{{name}}'
@@ -25,8 +26,15 @@ spec:
         helm:
           releaseName: '{{name}}'
           values: |
-            # NOTE: Configure the Forgejo URL and runner registration token before enabling.
-            # See README for required values and secret creation.
+            runner:
+              config:
+                # Keep secrets out of Git: the registration token is provided via a Secret
+                # (typically provisioned from Vault via External Secrets).
+                create: false
+                existingSecret: "{{configSecretName}}"
+                instance: "{{forgejoUrl}}"
+              labels:
+                - ubuntu-latest
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{namespace}}'
