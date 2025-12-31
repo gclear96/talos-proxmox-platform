@@ -19,4 +19,5 @@ resources:
   - rbac-vault-tokenreview.yaml
   - external-secrets-vault-authentik.yaml
   - external-secrets-vault-forgejo.yaml
+  - external-secrets-vault-forgejo-runner.yaml
   - external-secrets-vault-monitoring.yaml
