@@ -2,3 +2,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: forgejo-runner
+  labels:
+    # Forgejo runner uses Docker-in-Docker by default, which requires privileged pods.
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/warn: privileged
