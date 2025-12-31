@@ -11,7 +11,7 @@ spec:
             namespace: forgejo-runner
             repoURL: oci://codeberg.org/wrenix/helm-charts
             chart: forgejo-runner
-            version: 0.6.17
+            version: 0.4.28
             forgejoUrl: https://forgejo.k8s.magomago.moe
             configSecretName: forgejo-runner-config
   template:

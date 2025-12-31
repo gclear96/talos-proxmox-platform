@@ -39,7 +39,7 @@ ApplicationSet (`clusters/homelab/bootstrap/applicationset-oci.yaml`).
   - authentik `2025.10.3`
 - OCI apps:
   - Forgejo (`oci://code.forgejo.org/forgejo-helm/forgejo`, pinned `15.0.3`)
-  - Forgejo runner (`oci://codeberg.org/wrenix/helm-charts/forgejo-runner`, pinned `0.6.17`)
+  - Forgejo runner (`oci://codeberg.org/wrenix/helm-charts/forgejo-runner`, pinned `0.4.28`)
 
 ## Namespaces
 
