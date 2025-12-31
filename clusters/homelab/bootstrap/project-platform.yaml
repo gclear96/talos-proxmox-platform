@@ -16,6 +16,7 @@ spec:
     - oci://code.forgejo.org/forgejo-helm
     - oci://code.forgejo.org/forgejo-helm/forgejo
     - oci://codeberg.org/wrenix/helm-charts
+    - oci://codeberg.org/wrenix/helm-charts/forgejo-runner
     - oci://ghcr.io/visualon/bitnamicharts
     - https://charts.external-secrets.io
     - https://charts.goauthentik.io
