@@ -18,7 +18,8 @@ ApplicationSet (`clusters/homelab/bootstrap/applicationset-oci.yaml`).
 - Update `clusters/homelab/bootstrap/project-platform.yaml` `spec.sourceRepos` to your actual GitHub/Forgejo repo URL(s).
 - Update `clusters/homelab/bootstrap/applicationset-wrapped-charts.yaml` `repoURL` (template) to match.
 - Update `clusters/homelab/bootstrap/applicationset-oci.yaml` (Forgejo `ingressHost`, chart version if desired).
-- Update `clusters/homelab/bootstrap/applicationset-oci-runners.yaml` with your Forgejo runner config once Forgejo is up.
+- Ensure `clusters/homelab/bootstrap/applicationset-oci-runners.yaml` has the correct runner chart/version and runner label mapping (this workspace uses label `ubuntu-latest`).
+- Ensure Vault contains `kv/forgejo/runner` and External Secrets can read it (see “Forgejo runner” section below).
 - Set per-cluster overrides in `clusters/homelab/values/` (example: `ingress-nginx.yaml` for LoadBalancer).
 - If you plan to use cert-manager ACME issuers, edit `clusters/homelab/values/cert-manager.yaml` and install a DNS-01 webhook for Porkbun (see below).
 - `hack/set-repourl.sh` can help rewrite repoURL strings during cutover.
@@ -72,9 +73,27 @@ Forgejo is set to `forgejo.k8s.magomago.moe` in `clusters/homelab/bootstrap/appl
 ## Forgejo runner (no secrets in Git)
 
 The Forgejo runner chart is included as an OCI ApplicationSet in
-`clusters/homelab/bootstrap/applicationset-oci-runners.yaml`. You must supply the Forgejo
-URL and a runner registration token (typically via a Secret referenced in values). Update the
-inline Helm values in that ApplicationSet after you create the Secret.
+`clusters/homelab/bootstrap/applicationset-oci-runners.yaml`.
+
+This workspace configures the runner so **no secrets are committed to Git**:
+
+- Namespace: `forgejo-runner` (created by `clusters/homelab/bootstrap/namespace-forgejo-runner.yaml`)
+  - Note: the runner uses Docker-in-Docker by default and requires privileged pods, so the namespace is labelled accordingly.
+- Runner init Secret: `forgejo-runner-init` in `forgejo-runner` namespace
+  - Created by External Secrets from Vault via `clusters/homelab/bootstrap/external-secrets-vault-forgejo-runner.yaml`
+  - Expected keys (env vars): `CONFIG_TOKEN`, `CONFIG_INSTANCE`, `CONFIG_NAME`
+- The chart hook generates `secret/forgejo-runner-config` containing the runner `.runner` file.
+
+Vault secret shape (KV v2, mount `kv/` by default):
+
+- Path: `kv/forgejo/runner`
+- Properties:
+  - `token` (runner registration token)
+  - `instance` (Forgejo base URL, e.g. `https://forgejo.k8s.magomago.moe`)
+  - `name` (runner name, e.g. `forgejo-runner`)
+
+If runner pods are stuck pending with PodSecurity errors, confirm the `forgejo-runner` namespace has
+`pod-security.kubernetes.io/enforce: privileged` and restart the deployment.
 
 ## Per-cluster values
 
