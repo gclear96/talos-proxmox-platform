@@ -4,3 +4,6 @@ ingress-nginx:
   controller:
     service:
       type: LoadBalancer
+  # Expose Forgejo SSH via the ingress-nginx LoadBalancer (TCP service mapping).
+  tcp:
+    "22": "forgejo/forgejo-ssh:22"
