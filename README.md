@@ -36,6 +36,7 @@ ApplicationSet (`clusters/homelab/bootstrap/applicationset-oci.yaml`).
   - external-secrets `1.2.0`
   - vault `0.31.0`
   - longhorn `1.10.1`
+  - oauth2-proxy `10.0.0`
   - metallb `0.15.3`
   - authentik `2025.10.3`
 - OCI apps:
@@ -56,6 +57,7 @@ Wrapper-chart apps are deployed to fixed namespaces for production-style separat
 - `kube-prometheus-stack` → `monitoring`
 - `loki` → `loki`
 - `vault` → `vault`
+- `oauth2-proxy` → `oauth2-proxy`
 
 Additional apps can be enabled by adding entries to
 `clusters/homelab/bootstrap/applicationset-wrapped-charts.yaml` and creating

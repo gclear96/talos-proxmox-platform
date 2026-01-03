@@ -47,6 +47,12 @@ spec:
             gitea:
               admin:
                 existingSecret: forgejo-admin
+              oauth:
+                - name: "authentik"
+                  provider: "openidConnect"
+                  existingSecret: forgejo-oauth-authentik
+                  autoDiscoverUrl: "https://authentik.k8s.magomago.moe/application/o/forgejo/.well-known/openid-configuration"
+                  scopes: "openid email profile"
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{namespace}}'

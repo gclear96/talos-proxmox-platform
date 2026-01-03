@@ -1,0 +1,31 @@
+oauth2-proxy:
+  config:
+    existingSecret: oauth2-proxy-authentik
+    configFile: |-
+      provider = "oidc"
+      oidc_issuer_url = "https://authentik.k8s.magomago.moe/application/o/longhorn/"
+      redirect_url = "https://auth.k8s.magomago.moe/oauth2/callback"
+      email_domains = [ "*" ]
+      upstreams = [ "file:///dev/null" ]
+      cookie_secure = true
+      cookie_domains = [ ".k8s.magomago.moe" ]
+  extraArgs:
+    reverse-proxy: "true"
+    set-authorization-header: "true"
+    set-xauthrequest: "true"
+    pass-authorization-header: "true"
+    pass-access-token: "true"
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    hosts:
+      - auth.k8s.magomago.moe
+    path: /oauth2
+    pathType: Prefix
+    tls:
+      - secretName: oauth2-proxy-tls
+        hosts:
+          - auth.k8s.magomago.moe
