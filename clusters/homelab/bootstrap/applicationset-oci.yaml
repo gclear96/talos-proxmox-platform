@@ -53,6 +53,9 @@ spec:
                   existingSecret: forgejo-oauth-authentik
                   autoDiscoverUrl: "https://authentik.k8s.magomago.moe/application/o/forgejo/.well-known/openid-configuration"
                   scopes: "openid email profile"
+            # Avoid multi-attach errors with the RWO PVC during upgrades.
+            strategy:
+              type: Recreate
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{namespace}}'
