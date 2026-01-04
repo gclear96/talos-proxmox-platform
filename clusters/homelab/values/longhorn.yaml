@@ -24,6 +24,6 @@ longhorn:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
       nginx.ingress.kubernetes.io/ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/auth-url: "http://oauth2-proxy.oauth2-proxy.svc.cluster.local/oauth2/auth"
+      nginx.ingress.kubernetes.io/auth-url: "http://platform-oauth2-proxy.oauth2-proxy.svc.cluster.local/oauth2/auth"
       nginx.ingress.kubernetes.io/auth-signin: "https://auth.k8s.magomago.moe/oauth2/start?rd=$scheme://$host$request_uri"
       nginx.ingress.kubernetes.io/auth-response-headers: "Authorization,X-Auth-Request-User,X-Auth-Request-Email,X-Auth-Request-Preferred-Username,X-Auth-Request-Groups"
