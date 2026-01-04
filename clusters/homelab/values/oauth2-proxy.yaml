@@ -6,6 +6,7 @@ oauth2-proxy:
       oidc_issuer_url = "https://authentik.k8s.magomago.moe/application/o/longhorn/"
       redirect_url = "https://auth.k8s.magomago.moe/oauth2/callback"
       email_domains = [ "*" ]
+      insecure_oidc_allow_unverified_email = true
       whitelist_domains = [ ".k8s.magomago.moe" ]
       upstreams = [ "file:///dev/null" ]
       cookie_secure = true
