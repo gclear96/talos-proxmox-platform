@@ -48,12 +48,14 @@ kube-prometheus-stack:
         allow_sign_up: true
         client_id: grafana
         client_secret: $__env{GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET}
-        scopes: openid profile email
+        scopes: openid profile email groups
         auth_url: https://authentik.k8s.magomago.moe/application/o/authorize/
         token_url: https://authentik.k8s.magomago.moe/application/o/token/
         api_url: https://authentik.k8s.magomago.moe/application/o/userinfo/
         use_pkce: true
         use_refresh_token: true
+        allow_assign_grafana_admin: true
+        role_attribute_path: "contains(groups[*], 'platform-admins') && 'GrafanaAdmin' || contains(groups[*], 'grafana-admins') && 'GrafanaAdmin' || contains(groups[*], 'grafana-editors') && 'Editor' || 'Viewer'"
     ingress:
       enabled: true
       ingressClassName: nginx
