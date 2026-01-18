@@ -11,6 +11,11 @@ democratic-csi:
     config:
       driver: freenas-iscsi
 
+  node:
+    driver:
+      iscsiDirHostPath: /var/etc/iscsi
+      iscsiDirHostPathType: DirectoryOrCreate
+
   storageClasses:
     - name: democratic-iscsi
       defaultClass: true
