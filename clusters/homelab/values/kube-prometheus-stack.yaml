@@ -5,7 +5,7 @@ kube-prometheus-stack:
       storageSpec:
         volumeClaimTemplate:
           spec:
-            storageClassName: longhorn
+            storageClassName: democratic-iscsi
             accessModes:
               - ReadWriteOnce
             resources:
@@ -16,7 +16,7 @@ kube-prometheus-stack:
       storage:
         volumeClaimTemplate:
           spec:
-            storageClassName: longhorn
+            storageClassName: democratic-iscsi
             accessModes:
               - ReadWriteOnce
             resources:
@@ -27,7 +27,7 @@ kube-prometheus-stack:
     persistence:
       enabled: true
       type: sts
-      storageClassName: longhorn
+      storageClassName: democratic-iscsi
       accessModes:
         - ReadWriteOnce
       size: 2Gi

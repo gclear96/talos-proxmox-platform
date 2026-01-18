@@ -18,6 +18,7 @@ spec:
     - oci://codeberg.org/wrenix/helm-charts
     - oci://codeberg.org/wrenix/helm-charts/forgejo-runner
     - oci://ghcr.io/visualon/bitnamicharts
+    - https://democratic-csi.github.io/charts
     - https://charts.external-secrets.io
     - https://charts.goauthentik.io
     - https://charts.jetstack.io

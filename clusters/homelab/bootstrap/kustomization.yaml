@@ -10,6 +10,7 @@ resources:
   - application-kube-prometheus-stack.yaml
   - argocd-ingress.yaml
   - namespace-authentik.yaml
+  - namespace-democratic-csi.yaml
   - namespace-forgejo.yaml
   - namespace-forgejo-runner.yaml
   - namespace-longhorn-system.yaml
@@ -20,6 +21,7 @@ resources:
   - rbac-vault-tokenreview.yaml
   - external-secrets-vault-argocd.yaml
   - external-secrets-vault-authentik.yaml
+  - external-secrets-vault-democratic-csi.yaml
   - external-secrets-vault-forgejo.yaml
   - external-secrets-vault-forgejo-runner.yaml
   - external-secrets-vault-monitoring.yaml

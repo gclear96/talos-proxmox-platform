@@ -22,6 +22,9 @@ spec:
           - name: longhorn
             namespace: longhorn-system
             path: apps/longhorn/chart
+          - name: democratic-csi
+            namespace: democratic-csi
+            path: apps/democratic-csi/chart
           - name: oauth2-proxy
             namespace: oauth2-proxy
             path: apps/oauth2-proxy/chart

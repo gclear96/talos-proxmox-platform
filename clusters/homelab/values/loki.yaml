@@ -13,7 +13,7 @@ loki:
     persistence:
       enabled: true
       size: 5Gi
-      storageClass: longhorn
+      storageClass: democratic-iscsi
 
   write:
     replicas: 0

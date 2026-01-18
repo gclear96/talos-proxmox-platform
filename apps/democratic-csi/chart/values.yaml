@@ -1,0 +1,2 @@
+# Values for the upstream dependency chart: democratic-csi
+# Cluster-specific overrides live in clusters/homelab/values/democratic-csi.yaml
