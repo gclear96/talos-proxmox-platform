@@ -19,9 +19,6 @@ spec:
           - name: metallb
             namespace: metallb-system
             path: apps/metallb/chart
-          - name: longhorn
-            namespace: longhorn-system
-            path: apps/longhorn/chart
           - name: democratic-csi
             namespace: democratic-csi
             path: apps/democratic-csi/chart

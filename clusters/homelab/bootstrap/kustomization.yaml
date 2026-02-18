@@ -13,7 +13,6 @@ resources:
   - namespace-democratic-csi.yaml
   - namespace-forgejo.yaml
   - namespace-forgejo-runner.yaml
-  - namespace-longhorn-system.yaml
   - namespace-metallb-system.yaml
   - namespace-monitoring.yaml
   - namespace-oauth2-proxy.yaml
