@@ -35,7 +35,7 @@ ApplicationSet (`clusters/homelab/bootstrap/applicationset-oci.yaml`).
   - metrics-server `3.13.0`
   - external-secrets `1.2.0`
   - vault `0.31.0`
-  - longhorn `1.10.1`
+  - democratic-csi `0.15.1`
   - oauth2-proxy `10.0.0`
   - metallb `0.15.3`
   - authentik `2025.10.3`
@@ -51,7 +51,7 @@ Wrapper-chart apps are deployed to fixed namespaces for production-style separat
 - `cert-manager` → `cert-manager`
 - `porkbun-webhook` → `cert-manager`
 - `metallb` → `metallb-system`
-- `longhorn` → `longhorn-system`
+- `democratic-csi` → `democratic-csi`
 - `metrics-server` → `metrics-server`
 - `external-secrets` → `external-secrets`
 - `kube-prometheus-stack` → `monitoring`
@@ -106,6 +106,18 @@ The ApplicationSet for wrapper charts loads a per-cluster values file if present
 Missing files are ignored, so you only need overrides for the apps you customize. For example,
 `clusters/homelab/values/ingress-nginx.yaml` currently sets `service.type: LoadBalancer`.
 
+## Storage (democratic-csi on TrueNAS)
+
+- Default StorageClass: `democratic-iscsi` (see `clusters/homelab/values/democratic-csi.yaml`).
+- Driver: `freenas-iscsi` (TrueNAS SCALE). Secret config is sourced from Vault via
+  `clusters/homelab/bootstrap/external-secrets-vault-democratic-csi.yaml`.
+- Dataset layout:
+  - volumes: `kubernetes/iscsi/vols`
+  - snapshots: `kubernetes/iscsi/snaps`
+- Talos iSCSI host path is set to `/var/etc/iscsi` to match Talos’ filesystem layout.
+- `allowInsecure` is currently set to `true` in the driver config due to TLS verification issues; revisit
+  once the TrueNAS API certificate chain is validated end-to-end.
+
 ## Cert-manager ClusterIssuers (DNS-01)
 
 ClusterIssuers are rendered by the cert-manager wrapper chart using per-cluster values in
@@ -132,7 +144,8 @@ kubectl -n cert-manager create secret generic porkbun-key \
 - MetalLB: IP pools and advertisements are configured in `clusters/homelab/values/metallb.yaml`
   (we pin ARP announcements to a specific NIC via `l2Advertisements[].interfaces`, e.g. `ens18`;
   `l2Advertisements[].nodeSelectors` are intentionally unset to keep HA).
-- Longhorn: requires node prerequisites (iSCSI, kernel modules, and Talos extensions).
+- democratic-csi (TrueNAS iSCSI): requires node prerequisites (iSCSI tools, kernel modules, and Talos extensions).
+- Longhorn has been removed from platform GitOps; complete cluster-side pruning before reusing `longhorn-system`.
 - Vault: configure storage backend and unseal strategy; defaults are not production-ready.
 - Authentik: database password + secret key are sourced from Vault (`authentik/env`); configure email + initial setup before exposing it broadly.
 
