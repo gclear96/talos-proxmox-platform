@@ -58,6 +58,35 @@ spec:
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{namespace}}'
+      ignoreDifferences:
+        - group: apps
+          kind: StatefulSet
+          name: platform-garage
+          jsonPointers:
+            - /spec/revisionHistoryLimit
+            - /spec/updateStrategy
+            - /spec/template/spec/dnsPolicy
+            - /spec/template/spec/restartPolicy
+            - /spec/template/spec/schedulerName
+            - /spec/template/spec/terminationGracePeriodSeconds
+            - /spec/template/spec/serviceAccount
+            - /spec/template/spec/containers/0/ports/0/protocol
+            - /spec/template/spec/containers/0/ports/1/protocol
+            - /spec/template/spec/containers/0/ports/2/protocol
+            - /spec/template/spec/containers/0/terminationMessagePath
+            - /spec/template/spec/containers/0/terminationMessagePolicy
+            - /spec/template/spec/initContainers/0/resources
+            - /spec/template/spec/initContainers/0/terminationMessagePath
+            - /spec/template/spec/initContainers/0/terminationMessagePolicy
+            - /spec/template/spec/volumes/0/configMap/defaultMode
+            - /spec/volumeClaimTemplates/0/apiVersion
+            - /spec/volumeClaimTemplates/0/kind
+            - /spec/volumeClaimTemplates/0/spec/volumeMode
+            - /spec/volumeClaimTemplates/0/status
+            - /spec/volumeClaimTemplates/1/apiVersion
+            - /spec/volumeClaimTemplates/1/kind
+            - /spec/volumeClaimTemplates/1/spec/volumeMode
+            - /spec/volumeClaimTemplates/1/status
       syncPolicy:
         automated:
           prune: true
