@@ -145,3 +145,14 @@ Cleanup done:
 - Enforce one-at-a-time Terraform apply per repo/environment in Forgejo Actions concurrency groups.
 - Store Vault init/unseal artifacts in secure offline storage and remove local transient copies.
 - Keep this runbook updated when recovery procedures change.
+
+## Follow-up incident (2026-02-21)
+
+- Symptom: `akadmin` intermittently lost Admin UI access and Authentik Terraform CI failed with `403` on group reads.
+- Root cause: Terraform drift/regression around `authentik Admins` superuser handling.
+- Fix: ensure managed group config preserves superuser status:
+  - `authentik-terraform-repo/main.tf` sets `is_superuser = each.value == "authentik Admins"`.
+- Verification:
+  - `authentik Admins` remains superuser in live state.
+  - `akadmin` remains in `authentik Admins`.
+  - Authentik CI apply succeeds with `allow_destructive=false` (run `45`).

@@ -145,7 +145,7 @@ kubectl -n cert-manager create secret generic porkbun-key \
   (we pin ARP announcements to a specific NIC via `l2Advertisements[].interfaces`, e.g. `ens18`;
   `l2Advertisements[].nodeSelectors` are intentionally unset to keep HA).
 - democratic-csi (TrueNAS iSCSI): requires node prerequisites (iSCSI tools, kernel modules, and Talos extensions).
-- Longhorn has been removed from platform GitOps; complete cluster-side pruning before reusing `longhorn-system`.
+- Longhorn has been removed from platform GitOps and fully decommissioned in-cluster.
 - Vault: configure storage backend and unseal strategy; defaults are not production-ready.
 - Authentik: database password + secret key are sourced from Vault (`authentik/env`); configure email + initial setup before exposing it broadly.
 
