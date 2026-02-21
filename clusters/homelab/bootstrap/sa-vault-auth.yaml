@@ -33,9 +33,3 @@ kind: ServiceAccount
 metadata:
   name: vault-auth
   namespace: vault
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: vault-auth
-  namespace: oauth2-proxy

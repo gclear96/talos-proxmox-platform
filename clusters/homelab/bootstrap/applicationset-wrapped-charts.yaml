@@ -22,9 +22,6 @@ spec:
           - name: democratic-csi
             namespace: democratic-csi
             path: apps/democratic-csi/chart
-          - name: oauth2-proxy
-            namespace: oauth2-proxy
-            path: apps/oauth2-proxy/chart
           - name: metrics-server
             namespace: metrics-server
             path: apps/metrics-server/chart
