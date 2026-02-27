@@ -1,0 +1,48 @@
+velero:
+  initContainers:
+    - name: velero-plugin-for-aws
+      image: velero/velero-plugin-for-aws:v1.13.0
+      imagePullPolicy: IfNotPresent
+      volumeMounts:
+        - mountPath: /target
+          name: plugins
+
+  credentials:
+    useSecret: true
+    existingSecret: velero-s3-credentials
+
+  configuration:
+    features: EnableCSI
+    uploaderType: kopia
+    defaultBackupTTL: 168h
+    backupStorageLocation:
+      - name: default
+        provider: aws
+        bucket: k8s-velero
+        default: true
+        credential:
+          name: velero-s3-credentials
+          key: cloud
+        config:
+          region: us-east-1
+          s3Url: http://192.168.50.240:8333
+          s3ForcePathStyle: "true"
+          insecureSkipTLSVerify: "true"
+
+  backupsEnabled: true
+  snapshotsEnabled: false
+
+  deployNodeAgent: true
+
+  schedules:
+    daily-full:
+      disabled: false
+      schedule: "0 3 * * *"
+      template:
+        ttl: 168h
+        includedNamespaces:
+          - argocd
+          - authentik
+          - forgejo
+          - monitoring
+          - vault

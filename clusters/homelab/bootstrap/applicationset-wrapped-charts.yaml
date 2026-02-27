@@ -37,6 +37,9 @@ spec:
           - name: garage
             namespace: garage
             path: apps/garage/chart
+          - name: velero
+            namespace: velero
+            path: apps/velero/chart
   template:
     metadata:
       name: 'platform-{{name}}'
